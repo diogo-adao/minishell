@@ -1,18 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:53:11 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/29 15:52:01 by diolivei         ###   ########.fr       */
+/*   Created: 2024/04/24 15:19:34 by diolivei          #+#    #+#             */
+/*   Updated: 2024/04/26 14:38:51 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int main(int argc, char *argv[])
+void	ft_putstr_fd(char *s, int fd)
 {
-	return (0);
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
 }
+
+/* int main()
+{
+    ft_putstr_fd("Hello", 1);
+	ft_putstr_fd("\n", 1);
+    return (0);
+} */

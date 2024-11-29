@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:53:11 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/29 15:52:01 by diolivei         ###   ########.fr       */
+/*   Created: 2024/04/24 15:19:01 by diolivei          #+#    #+#             */
+/*   Updated: 2024/04/24 16:20:18 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int main(int argc, char *argv[])
+void	ft_putendl_fd(char *s, int fd)
 {
-	return (0);
+	ft_putstr_fd(s, fd);
+	write(fd, "\n", 1);
 }
+
+/* int main()
+{
+    ft_putendl_fd("Hello", 1);
+    return (0);
+} */

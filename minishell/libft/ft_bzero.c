@@ -1,18 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:53:11 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/29 15:52:01 by diolivei         ###   ########.fr       */
+/*   Created: 2024/04/11 18:37:05 by diolivei          #+#    #+#             */
+/*   Updated: 2024/04/16 14:51:28 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int main(int argc, char *argv[])
+void	ft_bzero(void *str, size_t n)
 {
-	return (0);
+	size_t	i;
+	char	*string;
+
+	i = 0;
+	string = (char *)str;
+	while (i < n)
+	{
+		string[i] = 0;
+		i++;
+	}
 }
+
+/*int main()
+{
+    char str[] = "42 School ";
+    printf("before bzero: %s\n", str);
+    ft_bzero(str, 2);
+    printf("after bzero: %s\n", str);
+    return (0);
+}*/

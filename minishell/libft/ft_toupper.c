@@ -1,18 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:53:11 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/29 15:52:01 by diolivei         ###   ########.fr       */
+/*   Created: 2024/04/15 15:16:16 by diolivei          #+#    #+#             */
+/*   Updated: 2024/04/15 15:45:54 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int main(int argc, char *argv[])
+int	ft_toupper(int c)
 {
-	return (0);
+	if (c >= 'a' && c <= 'z')
+	{
+		return (c - 32);
+	}
+	else
+		return (c);
 }
+
+/*int main() {
+
+	char c = 'a';
+	printf("%c\n", ft_toupper(c));
+	return (0);
+}*/

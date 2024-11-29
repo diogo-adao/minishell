@@ -6,7 +6,13 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/22 17:53:01 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:48:17 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef MINISHELL_H
+#define MINISHELL_H
+
+#include "libft/libft.h"
+
+#endif
