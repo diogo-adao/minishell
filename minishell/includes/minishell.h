@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/09 16:22:27 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/09 18:45:48 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 typedef struct s_data
 {
-	char **argv;
-	int argc;
-}	t_data;
+    char **tokens;   // Array of tokens (parsed input)
+    int token_count; // Number of tokens
+} t_data;
 
 #endif
