@@ -1,18 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:53:11 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/29 15:52:01 by diolivei         ###   ########.fr       */
+/*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
+/*   Updated: 2024/12/09 16:22:27 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#ifndef MINISHELL_H
+#define MINISHELL_H
 
-int main(int argc, char *argv[])
+#include "../libft/libft.h"
+#include <readline/readline.h>
+#include <readline/history.h>
+
+typedef struct s_data
 {
-	return (0);
-}
+	char **argv;
+	int argc;
+}	t_data;
+
+#endif
