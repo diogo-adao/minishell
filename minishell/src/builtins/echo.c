@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:11:35 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/09 19:27:40 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:24:43 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * In the end it prints the tokens passed after "echo" with or without newline
  */
 
-int	check_option(t_data *data)
+/* int	check_option(t_data *data)
 {
 	int	j;
 	int	valid_option;
@@ -35,7 +35,7 @@ int	check_option(t_data *data)
 		j++;
 	}
 	return (valid_option);
-}
+} */
 
 int	ft_echo(t_data *data)
 {
@@ -46,7 +46,7 @@ int	ft_echo(t_data *data)
 	i = 1;
 	j = 0;
 	newline = 1;
-	if (data->tokens[1] && data->tokens[1][0] == '-' && check_option(data))
+	if (data->tokens[1] && data->option == 1)
 	{
 		newline = 0;
 		i++;
