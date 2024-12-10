@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:11:35 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/10 16:24:43 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:48:23 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,11 @@
 int	ft_echo(t_data *data)
 {
 	int	i;
-	int	j;
 	int	newline;
 
 	i = 1;
-	j = 0;
 	newline = 1;
-	if (data->tokens[1] && data->option == 1)
+	if (data->tokens[i] && data->option == 1)
 	{
 		newline = 0;
 		i++;
