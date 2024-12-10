@@ -1,13 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/09 16:25:31 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/09 16:26:05 by diolivei         ###   ########.fr       */
+/*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
+/*   Updated: 2024/12/10 14:33:24 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#ifndef MINISHELL_H
+#define MINISHELL_H
+
+#include "../libraries/libft.h"
+#include <readline/readline.h>
+#include <readline/history.h>
+
+typedef struct s_data
+{
+	char **argv;
+	int argc;
+}	t_data;
+
+#endif
