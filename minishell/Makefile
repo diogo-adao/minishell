@@ -6,7 +6,7 @@
 #    By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/22 17:52:51 by diolivei          #+#    #+#              #
-#    Updated: 2024/12/10 16:22:37 by diolivei         ###   ########.fr        #
+#    Updated: 2024/12/12 18:09:31 by diolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = minishell
 
-SRCS = src/parsing/minishell.c
+SRCS = src/parsing/minishell.c src/builtins/echo.c
 
 LIBFT = ./libraries/libft.a
 

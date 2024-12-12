@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:46 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/10 18:31:35 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/12 19:12:08 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <dirent.h>
 #include <libgen.h>
 
-int main(void)
+/* int main(void)
 {
 	char *path = getcwd(NULL, 0);
 	printf("%s\n", path);
@@ -23,4 +23,4 @@ int main(void)
 	path = getcwd(NULL, 0);
 	printf("%s\n", path);
 	return (0);
-}
+} */
