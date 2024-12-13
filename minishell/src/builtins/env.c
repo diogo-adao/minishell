@@ -6,8 +6,13 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:31 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/09 16:26:05 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:35:05 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int builtin_env()
+{
+
+}

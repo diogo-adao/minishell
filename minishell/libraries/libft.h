@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 14:11:42 by diolivei          #+#    #+#             */
-/*   Updated: 2024/11/29 17:04:39 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:59:57 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdarg.h>
+# include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);

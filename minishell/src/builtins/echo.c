@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:11:35 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/12 19:09:24 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:56:58 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * if true: it iterates the string while it finds 'n'
  * if any other char is found the option is invalid so it gets treated as a
  * normal string to get printed.
- * In the end it iterates the rest of the list and prints each token value.
+ * In the end it iterates the rest of the command and prints each argument.
  */
 
 bool	is_option_n(const char *arg)
@@ -37,24 +37,24 @@ bool	is_option_n(const char *arg)
 	return (true);
 }
 
-int	builtin_echo(t_token *tokens)
+int	builtin_echo(t_cmd *cmd)
 {
 	bool	newline;
-	t_token	*current;
+	int		i;
 
 	newline = true;
-	current = tokens->next;
-	while (current && is_option_n(current->value))
+	i = 1;
+	while (cmd->args[i] && is_option_n(cmd->args[i]))
 	{
 		newline = false;
-		current = current->next;
+		i++;
 	}
-	while (current)
+	while (cmd->args[i])
 	{
-		printf("%s", current->value);
-		if (current->next)
+		printf("%s", cmd->args[i]);
+		if (cmd->args[i + 1])
 			printf(" ");
-		current = current->next;
+		i++;
 	}
 	if (newline)
 		printf("\n");
@@ -64,11 +64,9 @@ int	builtin_echo(t_token *tokens)
 // Main for testing
 /* int main()
 {
-	t_token arg3 = {"Hello", 0, NULL};
-	t_token arg2 = {"-nf", 0, &arg3};
-	t_token arg1 = {"-n", 0, &arg2};
-	t_token echo_cmd = {"echo", 0, &arg1};
+	char *args[] = {"echo", "$PATH", NULL};
+	t_cmd cmd = {args, 0, 0, NULL};
 
-	builtin_echo(&echo_cmd);
+	builtin_echo(&cmd);
 	return (0);
 } */
