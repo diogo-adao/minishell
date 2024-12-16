@@ -6,11 +6,18 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:35 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/13 19:39:33 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:01:45 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+/*
+ * builtin_exit() just exits the program if there is no argument as exit status
+ * if an argument is found it first checks if it's a numeric value and then
+ * uses ft_atoi() to convert the string to the correct value dealing with
+ * negative numbers with some basic math.
+ */
 
 bool	is_numeric(const char *str)
 {
@@ -55,7 +62,7 @@ int	builtin_exit(t_cmd *cmd)
 // Main for testing
 /* int main()
 {
-	char *args[] = {"exit", "10", "20", NULL};
+	char *args[] = {"exit", "-257", NULL};
 	t_cmd cmd = {args, 0, 0, NULL};
 	builtin_exit(&cmd);
 	return (0);

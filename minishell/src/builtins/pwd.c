@@ -6,11 +6,16 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:40 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/13 16:34:28 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:05:00 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+/*
+ * builtin_pwd() simply return the result of getcwd() function.
+ * if no error is found, it just prints the current working directory.
+ */
 
 int builtin_pwd()
 {

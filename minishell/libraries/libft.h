@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 14:11:42 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/13 18:59:57 by diolivei         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:18:17 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <stdio.h>
 # include <stdarg.h>
 # include <stdbool.h>
+# include <dirent.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
