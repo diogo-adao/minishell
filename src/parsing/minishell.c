@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:38:03 by ppassos           #+#    #+#             */
-/*   Updated: 2024/12/10 15:03:31 by ppassos          ###   ########.fr       */
+/*   Updated: 2024/12/16 15:21:46 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 
 int main(int ac, char **av)
 {
-    char *input;
+    char *l;
 	
     av = NULL;
-    input = "ok";
+    l = NULL;
     if (ac != 1)
         return(printf("ola"), 0);
     while (1) // Infinite loop
     {
-        // Display prompt and read input
-        if (!input) // Handle EOF (Ctrl+D)
-            break;
-        input = readline("minishell> ");
+        l = readline("minishell> "); // Display prompt and read input
+        printf("antes:%s\n", l);
         // Add input to history
         //add_history(input);
         // Exit condition
-        if (input == NULL || strcmp(input, "exit") == 0)
+        if (l == NULL || ft_strncmp(l, "exit", 4) == 0)
         {
-            free(input);
+            free(l);
             break;
         }
+        else
+            builtins(l);
         // Free the allocated memory for the input
-        free(input);
+        free(l);
     }
     return (0);
 }

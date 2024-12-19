@@ -6,7 +6,7 @@
 #    By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/10 14:12:01 by ppassos           #+#    #+#              #
-#    Updated: 2024/12/10 14:47:47 by ppassos          ###   ########.fr        #
+#    Updated: 2024/12/17 14:10:43 by ppassos          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = minishell
 
-SRCS = src/parsing/minishell.c 
+SRCS = src/parsing/minishell.c src/parsing/ifbuiltins.c src/parsing/quotesutils.c
 
 LIBFT = ./libraries/libft.a
 
