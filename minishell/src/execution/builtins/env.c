@@ -1,13 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/09 16:25:35 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/09 16:26:08 by diolivei         ###   ########.fr       */
+/*   Created: 2024/12/09 16:25:31 by diolivei          #+#    #+#             */
+/*   Updated: 2024/12/16 16:49:15 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
+
+void builtin_env(char **envp)
+{
+	while (*envp)
+	{
+		printf("%s\n", *envp);
+		envp++;
+	}
+}
