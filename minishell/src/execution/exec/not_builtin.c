@@ -64,7 +64,6 @@ void exec_path(t_cmd *cmd, char *cmd_path, char **env)
 	struct stat	buf;
 
 	execve(cmd_path, cmd->args, env);
-	//free(cmd_path);
 	if (stat(cmd->args[0], &buf) == 0 && S_ISDIR(buf.st_mode))
 	{
 		ft_putstr_fd("minishell: ", 2);

@@ -87,21 +87,22 @@ void	exec_cmd(t_cmd *cmd, char ***env)
 
 void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i)
 {
-	int fd[2];
+    int fd[2];
 
-	if (cmd->pid == 0)
-		pipe_fd(head, cmd, _pipe, i);
-	fd[0] = dup(0);
-	fd[1] = dup(1);
-	if (exec_redir(cmd))
-	{
-		if (cmd->args)
-			exec_cmd(cmd, env);
-	}
-	dup2(fd[0], 0);
-	dup2(fd[1], 1);
-	close(fd[0]);
-	close(fd[1]);
+	fd[0] = dup(STDIN_FILENO);
+    fd[1] = dup(STDOUT_FILENO);
+    pipe_fd(head, cmd, _pipe, i);
+    if (exec_redir(cmd))
+    {
+        if (cmd->args)
+            exec_cmd(cmd, env);
+    }
+	else
+		check_pid(cmd, env);
+    dup2(fd[0], STDIN_FILENO);
+    dup2(fd[1], STDOUT_FILENO);
+    close(fd[0]);
+    close(fd[1]);
 }
 
 void    start_execution(t_cmd *cmd, char ***env)
@@ -124,7 +125,7 @@ void    start_execution(t_cmd *cmd, char ***env)
         	cmd->pid = 1;
         if (cmd->pid == 0 || cmd->pid == 1)
             set_cmd(head, cmd, env, &_pipe, i);
-        cmd = cmd->next;
+     	cmd = cmd->next;
 		i++;
 	}
 	close_pipe(head, &_pipe);

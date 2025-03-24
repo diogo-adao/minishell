@@ -12,9 +12,7 @@
 
 /*
  ***************ERROS AINDA POR RESOLVER***************
- * É preciso uma função para substituir $? pela global variable
- * Algo está errado com o parsing do dollar sign impedindo o uso correto do export
- * Tem leaks
+ * Pode conter leaks
  */
 
 #ifndef MINISHELL_H

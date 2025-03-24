@@ -58,5 +58,4 @@ void pipe_fd(t_cmd *head, t_cmd *cmd, int (**_pipe)[2], int i)
     if (cmd->next)
         dup2((*_pipe)[i][1], 1);
     close_pipe(head, _pipe);
-    //free(*_pipe);
 }
