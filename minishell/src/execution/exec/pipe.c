@@ -44,8 +44,11 @@ void	close_pipe(t_cmd *cmd, int (**_pipe)[2])
 	i = 0;
 	while (cmd && cmd->next)
 	{
-		close((*_pipe)[i][0]);
-		close((*_pipe)[i][1]);
+        if (_pipe && (*_pipe))
+        {
+            close((*_pipe)[i][0]);
+            close((*_pipe)[i][1]);
+        }
         cmd = cmd->next;
 		i++;
 	}

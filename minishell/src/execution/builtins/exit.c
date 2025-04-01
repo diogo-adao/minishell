@@ -30,7 +30,6 @@ bool	is_numeric(const char *str)
 
 void	builtin_exit(t_cmd *cmd)
 {
-	printf("exit\n");
 	if (cmd->args[1])
 	{
 		if (!is_numeric(cmd->args[1]))

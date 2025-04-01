@@ -48,24 +48,33 @@ void    export_env(char ***env, char *arg)
     int i;
     char *key;
     char *pos;
+    char *new_entry;
     
     pos = ft_strchr(arg, '=');
     if (!pos)
         return;
-    i = -1;
     key = ft_substr(arg, 0, pos - arg);
+    new_entry = ft_strdup(arg);
+    if (!new_entry)
+    {
+        free(key);
+        return;
+    }
+    i = -1;
     while ((*env)[++i])
     {
         if (!ft_strncmp((*env)[i], key, pos - arg) && (*env)[i][pos - arg] == '=')
         {
             free((*env)[i]);
-            (*env)[i] = arg;
+            (*env)[i] = new_entry;
             free(key);
-            return ;
+            return;
         }
     }
+    
     free(key);
-    append_to_env(env, arg);
+    append_to_env(env, new_entry);
+    free(new_entry);
 }
 
 void    builtin_export(t_cmd *cmd, char ***env)

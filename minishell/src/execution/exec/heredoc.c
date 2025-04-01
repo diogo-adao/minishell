@@ -71,6 +71,9 @@ int is_heredoc(t_cmd *cmd)
     int fd;
     int flag;
     char *tmp;
+    char *itoa_j;
+    char *joined;
+    int j = 0;
 
     flag = 0;
     while (cmd)
@@ -80,16 +83,21 @@ int is_heredoc(t_cmd *cmd)
         {
             if (cmd->redir[i]->flag == HEREDOC)
             {
-                tmp = ft_strdup(ft_strjoin("/tmp/.heredoc_", ft_itoa(i)));
+                itoa_j = ft_itoa(j);
+                if (!itoa_j)
+                    return (0);
+                joined = ft_strjoin("/tmp/.heredoc_", itoa_j);
+                free(itoa_j);
+                tmp = ft_strdup(joined);
+                free(joined);
                 fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0664);
                 heredoc_loop(fd, cmd->redir[i]->file, &flag);
                 free(cmd->redir[i]->file);
                 cmd->redir[i]->file = tmp;
             }
+            j++;
         }
         cmd = cmd->next;
     }
-    if (flag)
-        return (1);
-    return (0);
+    return (flag);
 }

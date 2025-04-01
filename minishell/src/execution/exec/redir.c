@@ -24,9 +24,9 @@ int file_open(t_cmd *cmd, int *input, int *output, int i)
             return (0);
         }
     }
-    if (cmd->redir[i]->flag == OUTPUT)
+    else if (cmd->redir[i]->flag == OUTPUT)
         *output = open(cmd->redir[i]->file, O_CREAT | O_WRONLY | O_TRUNC, 0664);
-    if (cmd->redir[i]->flag == APPEND)
+    else if (cmd->redir[i]->flag == APPEND)
         *output = open(cmd->redir[i]->file, 
             O_CREAT | O_WRONLY | O_APPEND, 0664);
     if (*output == -1)
@@ -45,6 +45,7 @@ int exec_redir(t_cmd *cmd)
     int output;
 
     i = 0;
+    output = 0;
     while (cmd->redir && cmd->redir[i])
     {
         if (!file_open(cmd, &input, &output, i))

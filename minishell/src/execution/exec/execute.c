@@ -12,7 +12,7 @@
 
 #include "../../../includes/minishell.h"
 
-void	check_pid(t_cmd *cmd, char ***env)
+void	check_pid(t_cmd *cmd, char ***env, int (**_pipe)[2])
 {
 	int	exit_code;
 
@@ -21,14 +21,24 @@ void	check_pid(t_cmd *cmd, char ***env)
 		exit_code = cmd->exit;
 		free_cmd(cmd);
 		free_arr(*env);
+		free(*_pipe);
 		exit(exit_code);
 	}
 	if (cmd->pid == 1 && (!ft_strncmp(cmd->args[0], "exit", 4)
 			&& ft_strlen(cmd->args[0]) == 4))
 	{
+		if (cmd->prev || cmd->next)
+			return ;
+		if (cmd->args[1] && is_numeric(cmd->args[1]))
+		{
+			if (cmd->args[2])
+				return ;	
+		}
+		printf("exit\n");
 		exit_code = cmd->exit;
 		free_cmd(cmd);
 		free_arr(*env);
+		free(*_pipe);
 		exit(exit_code);
 	}
 }
@@ -57,7 +67,7 @@ void	wait_pid(t_cmd *cmd)
 	}
 }
 
-void	exec_cmd(t_cmd *cmd, char ***env)
+void	exec_cmd(t_cmd *cmd, char ***env, int (**_pipe)[2])
 {
 	if ((!ft_strncmp(cmd->args[0], "echo", 4)
 			&& ft_strlen(cmd->args[0]) == 4))
@@ -82,7 +92,7 @@ void	exec_cmd(t_cmd *cmd, char ***env)
 		builtin_exit(cmd);
 	else
 		not_builtin(cmd, *env);
-	check_pid(cmd, env);
+	check_pid(cmd, env, _pipe);
 }
 
 void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i)
@@ -91,14 +101,15 @@ void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i)
 
 	fd[0] = dup(STDIN_FILENO);
     fd[1] = dup(STDOUT_FILENO);
-    pipe_fd(head, cmd, _pipe, i);
+	if (cmd->pid == 0)
+		pipe_fd(head, cmd, _pipe, i);
     if (exec_redir(cmd))
     {
         if (cmd->args)
-            exec_cmd(cmd, env);
+        	exec_cmd(cmd, env, _pipe);
     }
 	else
-		check_pid(cmd, env);
+		check_pid(cmd, env, _pipe);
     dup2(fd[0], STDIN_FILENO);
     dup2(fd[1], STDOUT_FILENO);
     close(fd[0]);
@@ -120,7 +131,14 @@ void    start_execution(t_cmd *cmd, char ***env)
     while (cmd)
     {
         if (cmd->args && (!is_builtin(cmd->args[0]) || cmd->next))
-        	cmd->pid = fork();
+		{
+			cmd->pid = fork();
+			if (ft_strncmp(cmd->args[0], "./minishell", 11) == 0)
+			{
+				signal(SIGINT, SIG_IGN);
+				signal(SIGQUIT, SIG_IGN);
+			}
+		}
         else
         	cmd->pid = 1;
         if (cmd->pid == 0 || cmd->pid == 1)
@@ -129,6 +147,8 @@ void    start_execution(t_cmd *cmd, char ***env)
 		i++;
 	}
 	close_pipe(head, &_pipe);
-	free(*_pipe);
 	wait_pid(head);
+	free(*_pipe);
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

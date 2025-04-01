@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 /*
- ***************ERROS AINDA POR RESOLVER***************
- * Pode conter leaks
+ ***************ERROS NO VALGRIND***************
+ * Command not found e alguns comandos com pipes estão a dar "Still reachable"
+ * SIGPIPE em alguns comandos apesar de não afetar o seu funcionamento
  */
 
 #ifndef MINISHELL_H
@@ -105,5 +106,6 @@ void	builtin_exit(t_cmd *cmd);
 void 	builtin_env(char **envp);
 void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, char ***env);
+bool	is_numeric(const char *str);
 
 #endif
