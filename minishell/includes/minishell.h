@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/03/18 18:08:47 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/08 15:51:39 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,14 @@ typedef struct s_cmd
 	struct s_cmd *prev; // previus command
 }	t_cmd;
 
+typedef struct aux
+{
+	t_token				*list;
+	t_token				*new_node;
+	int		i;
+	int		start;
+}	t_aux;
+
 // Global variable for exit status
 extern int exit_status;
 
@@ -83,6 +91,24 @@ int		cheker_comands(t_token *list);
 t_cmd	*execute_p(t_token *list);
 void	print_tokens(t_token *list); //funcao simples para imprimir
 void print_exec(t_cmd *list); // teste
+char	*getexp(char *line, int t, int i, char **env);
+
+//execute_p
+t_redir	**redir_fill(t_redir **redir, t_token *list, int i);
+char	**arg_fill(char **args, t_token *list, int i);
+int	string_count(t_token *list);
+int	redir_count(t_token *list);
+int	get_type(t_token *list);
+
+//expansao
+int	explen(char	*line, int i);
+int	endofexp(char letter);
+char *dolarparsing(char *line, char **env);
+void handle_double_quotes(int *i, char **line, char **temp, char **env);
+void handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env);
+void handle_single_quotes(int *i, char **line);
+void handle_dollar_sign(int *i, char **line, char **temp, char **env);
+void handle_exit_status(int *i, char **line, char **temp);
 
 // Executor functions
 char	*ft_get_env(char **env, char *key);

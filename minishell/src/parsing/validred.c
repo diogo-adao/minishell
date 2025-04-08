@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:28:08 by ppassos           #+#    #+#             */
-/*   Updated: 2025/02/13 09:19:21 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/03/27 16:55:13 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,28 @@
 	//quando < tem nada a esquerda
 	//quando << tem nada a esquerda
 	// se erro retornar 0
-int checker_list(t_token *list)
+int	checker_list(t_token *list)
 {
-	int pastP;
+	int	pastp;
 
-	pastP = 0;
+	pastp = 0;
 	if (list && list->type == PIPE)
-		return(0);
+		return (0);
 	while (list)
 	{
 		if (list->type == PIPE || list->type == REDIR)
 		{
 			if (list->next == NULL)
-				return(0);
-			if (pastP == 0 && list->type == PIPE)
-				pastP = -1;
-			else if ((list->type == REDIR && pastP == -1) || pastP == 0)
-				pastP = 1;
+				return (0);
+			if (pastp == 0 && list->type == PIPE)
+				pastp = -1;
+			else if ((list->type == REDIR && pastp == -1) || pastp == 0)
+				pastp = 1;
 			else
-				return(0);
+				return (0);
 		}
 		else
-			pastP = 0;
+			pastp = 0;
 		list = list->next;
 	}
 	return (1);
