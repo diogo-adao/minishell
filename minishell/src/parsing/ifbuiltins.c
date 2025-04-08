@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ifbuiltins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:29:16 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/08 15:54:49 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/08 19:57:39 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,6 @@ void	builtins(char *line, char ***env)
 	//print_tokens(list);
 	exec = execute_p(list);
 	//print_exec(exec);
-	start_execution(exec, env);
+	start_execution(exec, env, list, line);
 	free_all(list, line, exec, 1);
 }

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/08 15:51:39 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/08 19:54:53 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
  ***************ERROS NO VALGRIND***************
- * Command not found e alguns comandos com pipes estão a dar "Still reachable"
- * SIGPIPE em alguns comandos apesar de não afetar o seu funcionamento
+ * Do nada exit com argumentos passou a dar um erro valgrind
+ * Ainda a tratar dos leaks e processos
  */
 
 #ifndef MINISHELL_H
@@ -122,7 +122,7 @@ void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
 int		is_heredoc(t_cmd *cmd);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);
 int		is_builtin(char *arg);
-void    start_execution(t_cmd *cmd, char ***env);
+void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);
 void	free_cmd(t_cmd *cmd);
 void	pipe_fd(t_cmd *head, t_cmd *cmd, int (**_pipe)[2], int i);
 void	builtin_pwd();

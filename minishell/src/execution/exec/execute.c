@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:04 by diolivei          #+#    #+#             */
-/*   Updated: 2025/03/18 19:10:32 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/08 19:41:21 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	check_pid(t_cmd *cmd, char ***env, int (**_pipe)[2])
+void	check_pid(t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
 {
 	int	exit_code;
 
+	//printf("%d\n", cmd->pid);
 	if (cmd->pid == 0)
 	{
 		exit_code = cmd->exit;
-		free_cmd(cmd);
+		free_all(list, line, cmd, 1);
 		free_arr(*env);
 		free(*_pipe);
 		exit(exit_code);
@@ -32,11 +33,11 @@ void	check_pid(t_cmd *cmd, char ***env, int (**_pipe)[2])
 		if (cmd->args[1] && is_numeric(cmd->args[1]))
 		{
 			if (cmd->args[2])
-				return ;	
+				return ;
 		}
 		printf("exit\n");
 		exit_code = cmd->exit;
-		free_cmd(cmd);
+		free_all(list, line, cmd, 1);
 		free_arr(*env);
 		free(*_pipe);
 		exit(exit_code);
@@ -67,7 +68,7 @@ void	wait_pid(t_cmd *cmd)
 	}
 }
 
-void	exec_cmd(t_cmd *cmd, char ***env, int (**_pipe)[2])
+void	exec_cmd(t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
 {
 	if ((!ft_strncmp(cmd->args[0], "echo", 4)
 			&& ft_strlen(cmd->args[0]) == 4))
@@ -92,10 +93,10 @@ void	exec_cmd(t_cmd *cmd, char ***env, int (**_pipe)[2])
 		builtin_exit(cmd);
 	else
 		not_builtin(cmd, *env);
-	check_pid(cmd, env, _pipe);
+	check_pid(cmd, env, _pipe, list, line);
 }
 
-void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i)
+void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i, t_token *list, char *line)
 {
     int fd[2];
 
@@ -106,22 +107,22 @@ void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i)
     if (exec_redir(cmd))
     {
         if (cmd->args)
-        	exec_cmd(cmd, env, _pipe);
+        	exec_cmd(cmd, env, _pipe, list, line);
     }
 	else
-		check_pid(cmd, env, _pipe);
+		check_pid(cmd, env, _pipe, list, line);
     dup2(fd[0], STDIN_FILENO);
     dup2(fd[1], STDOUT_FILENO);
     close(fd[0]);
     close(fd[1]);
 }
 
-void    start_execution(t_cmd *cmd, char ***env)
+void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
 {
 	int (*_pipe)[2];
 	int i;
 	t_cmd *head;
-	
+
 	head = cmd;
 	i = 0;
     signal(SIGQUIT, signal_handler);
@@ -142,12 +143,12 @@ void    start_execution(t_cmd *cmd, char ***env)
         else
         	cmd->pid = 1;
         if (cmd->pid == 0 || cmd->pid == 1)
-            set_cmd(head, cmd, env, &_pipe, i);
+            set_cmd(head, cmd, env, &_pipe, i, list, line);
      	cmd = cmd->next;
 		i++;
 	}
-	close_pipe(head, &_pipe);
 	wait_pid(head);
+	close_pipe(head, &_pipe);
 	free(*_pipe);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);

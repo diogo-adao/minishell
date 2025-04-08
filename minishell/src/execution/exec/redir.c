@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:24 by diolivei          #+#    #+#             */
-/*   Updated: 2025/03/18 17:21:25 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/08 18:59:57 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int file_open(t_cmd *cmd, int *input, int *output, int i)
     else if (cmd->redir[i]->flag == OUTPUT)
         *output = open(cmd->redir[i]->file, O_CREAT | O_WRONLY | O_TRUNC, 0664);
     else if (cmd->redir[i]->flag == APPEND)
-        *output = open(cmd->redir[i]->file, 
+        *output = open(cmd->redir[i]->file,
             O_CREAT | O_WRONLY | O_APPEND, 0664);
     if (*output == -1)
     {
