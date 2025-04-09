@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dolarparsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:24:57 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/28 17:43:04 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/09 18:45:00 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*dolarparsing(char *line, char **env)
 			handle_single_quotes(&i, &line);
 		else if (line[i] == '$')
 			handle_dollar_sign(&i, &line, &temp, env);
-		if (strlen(line) != (unsigned long)i)
+		if (ft_strlen(line) != (unsigned long)i)
 			i++;
 	}
 	return (line);

@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:21 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/08 19:41:38 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/09 19:39:35 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,9 @@ void	close_pipe(t_cmd *cmd, int (**_pipe)[2])
 
 void pipe_fd(t_cmd *head, t_cmd *cmd, int (**_pipe)[2], int i)
 {
-	(void)head;
     if (i > 0)
         dup2((*_pipe)[i - 1][0], 0);
     if (cmd->next)
         dup2((*_pipe)[i][1], 1);
-    //close_pipe(head, _pipe);
+    close_pipe(head, _pipe);
 }

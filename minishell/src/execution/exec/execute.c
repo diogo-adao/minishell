@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:04 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/08 19:41:21 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/09 20:01:22 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	check_pid(t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *l
 {
 	int	exit_code;
 
-	//printf("%d\n", cmd->pid);
 	if (cmd->pid == 0)
 	{
 		exit_code = cmd->exit;
@@ -147,8 +146,8 @@ void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
      	cmd = cmd->next;
 		i++;
 	}
-	wait_pid(head);
 	close_pipe(head, &_pipe);
+	wait_pid(head);
 	free(*_pipe);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);

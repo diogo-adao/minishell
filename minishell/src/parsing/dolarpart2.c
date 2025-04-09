@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dolarpart2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:43:55 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/28 17:44:00 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/09 19:04:37 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void	handle_dollar_sign(int *i, char **line, char **temp, char **env)
 	}
 	else if ((*line)[*i + 1] == '?')
 		handle_exit_status(i, line, temp);
+	else
+		(*i)++;
 	(*i)--;
 	if (*i == -2)
 		(*i) = 0;
