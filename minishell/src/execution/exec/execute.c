@@ -12,19 +12,19 @@
 
 #include "../../../includes/minishell.h"
 
-void	check_pid(t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
+void	check_pid(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
 {
 	int	exit_code;
 
 	if (cmd->pid == 0)
 	{
 		exit_code = cmd->exit;
-		free_all(list, line, cmd, 1);
+		free_all(list, line, head, 1);
 		free_arr(*env);
 		free(*_pipe);
 		exit(exit_code);
 	}
-	if (cmd->pid == 1 && (!ft_strncmp(cmd->args[0], "exit", 4)
+	if (cmd->args && cmd->pid == 1 && (!ft_strncmp(cmd->args[0], "exit", 4)
 			&& ft_strlen(cmd->args[0]) == 4))
 	{
 		if (cmd->prev || cmd->next)
@@ -67,7 +67,7 @@ void	wait_pid(t_cmd *cmd)
 	}
 }
 
-void	exec_cmd(t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
+void	exec_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
 {
 	if ((!ft_strncmp(cmd->args[0], "echo", 4)
 			&& ft_strlen(cmd->args[0]) == 4))
@@ -91,8 +91,8 @@ void	exec_cmd(t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *li
 			&& ft_strlen(cmd->args[0]) == 4))
 		builtin_exit(cmd);
 	else
-		not_builtin(cmd, *env);
-	check_pid(cmd, env, _pipe, list, line);
+		not_builtin(head, cmd, *env, list, line, _pipe);
+	check_pid(head, cmd, env, _pipe, list, line);
 }
 
 void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i, t_token *list, char *line)
@@ -106,10 +106,10 @@ void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i, t_to
     if (exec_redir(cmd))
     {
         if (cmd->args)
-        	exec_cmd(cmd, env, _pipe, list, line);
+        	exec_cmd(head, cmd, env, _pipe, list, line);
     }
 	else
-		check_pid(cmd, env, _pipe, list, line);
+		check_pid(head, cmd, env, _pipe, list, line);
     dup2(fd[0], STDIN_FILENO);
     dup2(fd[1], STDOUT_FILENO);
     close(fd[0]);
@@ -130,7 +130,7 @@ void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
     create_pipes(cmd, &_pipe);
     while (cmd)
     {
-        if (cmd->args && (!is_builtin(cmd->args[0]) || cmd->next))
+        if (cmd->args && (!is_builtin(cmd->args[0]) || cmd->next || cmd->prev))
 		{
 			cmd->pid = fork();
 			if (ft_strncmp(cmd->args[0], "./minishell", 11) == 0)

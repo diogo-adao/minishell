@@ -12,8 +12,7 @@
 
 /*
  ***************ERROS NO VALGRIND***************
- * Do nada exit com argumentos passou a dar um erro valgrind
- * Ainda a tratar dos leaks e processos
+ * Só falta dar free nos still reachables em alguns comandos
  */
 
 #ifndef MINISHELL_H
@@ -117,7 +116,7 @@ char	**remove_from_env(char **env, char *to_remove);
 void	free_arr(char **arr);
 void	signal_handler(int sig);
 int		exec_redir(t_cmd *cmd);
-void	not_builtin(t_cmd *cmd, char **env);
+void	not_builtin(t_cmd *head, t_cmd *cmd, char **env, t_token *list, char *line, int (**_pipe)[2]);
 void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
 int		is_heredoc(t_cmd *cmd);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);

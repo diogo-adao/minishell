@@ -90,9 +90,9 @@ void    builtin_export(t_cmd *cmd, char ***env)
         {
             if (!is_valid(cmd->args[i]))
             {
-                ft_putstr_fd("minishell: export: ", 2);
-                ft_putstr_fd(cmd->args[i], 2);
-                ft_putstr_fd(": not a valid identifier\n", 2);
+                write(2, "minishell: export: ", 19);
+                write(2, cmd->args[i], ft_strlen(cmd->args[i]));
+                write(2, ": not a valid identifier\n", 25);
                 cmd->exit = 1;
                 break ;
             }

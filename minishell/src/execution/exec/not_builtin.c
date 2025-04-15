@@ -59,21 +59,24 @@ char *search_path(t_cmd *cmd, char **env)
 	return (final_path);
 }
 
-void exec_path(t_cmd *cmd, char *cmd_path, char **env)
+void exec_path(t_cmd *head, t_cmd *cmd, char *cmd_path, char **env, t_token *list, char *line, int (**_pipe)[2])
 {
 	struct stat	buf;
 
 	execve(cmd_path, cmd->args, env);
 	if (stat(cmd->args[0], &buf) == 0 && S_ISDIR(buf.st_mode))
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": Is a directory\n", 2);
+		write(2, "minishell: ", 11);
+		write(2, cmd->args[0], ft_strlen(cmd->args[0]));
+		write(2, ": Is a directory\n", 18);
+		free_all(list, line, head, 1);
+		free_arr(env);
+		free(*_pipe);
 		exit(126);
 	}
 }
 
-void	not_builtin(t_cmd *cmd, char **env)
+void	not_builtin(t_cmd *head, t_cmd *cmd, char **env, t_token *list, char *line, int (**_pipe)[2])
 {
 	char *cmd_path;
 
@@ -83,16 +86,16 @@ void	not_builtin(t_cmd *cmd, char **env)
 	if (!cmd_path)
 	{
 		if (cmd->args[0][0] == '.' || ft_strchr(cmd->args[0], '/'))
-			ft_putstr_fd("minishell: No such file or directory\n", 2);
+			write(2, "minishell: No such file or directory\n", 37);
 		else
 		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
+			write(2, "minishell: ", 11);
+			write(2, cmd->args[0], ft_strlen(cmd->args[0]));
+			write(2, ": command not found\n", 21);
 		}
 		cmd->exit = 127;
 		return ;
 	}
-	exec_path(cmd, cmd_path, env);
+	exec_path(head, cmd, cmd_path, env, list, line, _pipe);
 	free(cmd_path);
 }

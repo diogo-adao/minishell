@@ -44,12 +44,12 @@ void change_dir(t_cmd *cmd, char ***env, char *dir)
 
     if (chdir(dir) == -1)
     {
-        ft_putstr_fd("minishell: cd: ", 2);
-        ft_putstr_fd(dir, 2);
+        write(2, "minishell: cd: ", 15);
+        write(2, dir, ft_strlen(dir));
         if (access(dir, F_OK) == 0)
-            ft_putstr_fd(": Not a directory\n", 2);
+            write(2, ": Not a directory\n", 18);
         else
-            ft_putstr_fd(": No such file or directory\n", 2);
+            write(2, ": No such file or directory\n", 28);
         cmd->exit = 1;
     }
     else
@@ -69,7 +69,7 @@ void builtin_cd(t_cmd *cmd, char ***env)
         path = ft_get_env(*env, "HOME");
         if (!path)
         {
-            ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+            write(2, "minishell: cd: HOME not set\n", 28);
 			cmd->exit = 1;
         }
 		else
@@ -80,7 +80,7 @@ void builtin_cd(t_cmd *cmd, char ***env)
     }
     else if (cmd->args[2])
     {
-        ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+        write(2, "minishell: cd: too many arguments\n", 34);
         cmd->exit = 1;
     }
     else

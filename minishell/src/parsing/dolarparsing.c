@@ -66,13 +66,11 @@ char	*getexp(char *line, int t, int i, char **env)
 char	*dolarparsing(char *line, char **env)
 {
 	int		i;
-	char	*expenv;
 	char	*temp;
 
 	i = 0;
 	line = ft_copy(line);
 	temp = line;
-	expenv = NULL;
 	while (line[i])
 	{
 		if (line[i] == '"')

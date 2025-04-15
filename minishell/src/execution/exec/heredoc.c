@@ -30,8 +30,8 @@ int fill_heredoc(int fd, char *del, int *flag)
     line = readline("> ");
     if (!line)
     {
-        ft_putstr_fd("minishell: warning: ", 2);
-        ft_putstr_fd("here-document delimited by end-of-file\n", 2);
+        write(2, "minishell: warning: ", 20);
+        write(2, "here-document delimited by end-of-file\n", 39);
         return 0;
     }
     if (exit_status == 130)

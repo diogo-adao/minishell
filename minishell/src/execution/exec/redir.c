@@ -19,7 +19,7 @@ int file_open(t_cmd *cmd, int *input, int *output, int i)
         *input = open(cmd->redir[i]->file, O_RDONLY);
         if (*input == -1)
         {
-            ft_putstr_fd("minishell: No such file or directory\n", 2);
+            write(2, "minishell: No such file or directory\n", 37);
             cmd->exit = 1;
             return (0);
         }
@@ -31,7 +31,7 @@ int file_open(t_cmd *cmd, int *input, int *output, int i)
             O_CREAT | O_WRONLY | O_APPEND, 0664);
     if (*output == -1)
     {
-        ft_putstr_fd("minishell: No such file or directory\n", 2);
+        write(2, "minishell: No such file or directory\n", 37);
         cmd->exit = 1;
         return (0);
     }

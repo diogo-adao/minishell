@@ -34,15 +34,15 @@ void	builtin_exit(t_cmd *cmd)
 	{
 		if (!is_numeric(cmd->args[1]))
 		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(cmd->args[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
+			write(2, "minishell: exit: ", 17);
+			write(2, cmd->args[1], ft_strlen(cmd->args[1]));
+			write(2, ": numeric argument required\n", 28);
 			cmd->exit = 2;
 			return;
 		}
 		if (cmd->args[2])
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			write(2, "minishell: exit: too many arguments\n", 36);
 			cmd->exit = 1;
 			return;
 		}

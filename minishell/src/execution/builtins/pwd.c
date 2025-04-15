@@ -18,9 +18,6 @@ void builtin_pwd()
 
 	getcwd(path, sizeof(path));
 	if (errno == ERANGE)
-	{
-		ft_putstr_fd("minishell: pwd: cannot access directory: \
-		No such file or directory", 2);
-	}
+		write(2, "minishell: pwd: cannot access directory: No such file or directory", 66);
 	printf("%s\n", path);
 }
