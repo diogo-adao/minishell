@@ -66,3 +66,29 @@ int	is_builtin(char *arg)
 		return (1);
 	return (0);
 }
+
+void	start_execution_loop(t_exec_ctx *ctx, t_cmd *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd)
+	{
+		ctx->cmd = cmd;
+		if (cmd->args && (!is_builtin(cmd->args[0]) || cmd->next || cmd->prev))
+		{
+			cmd->pid = fork();
+			if (ft_strncmp(cmd->args[0], "./minishell", 11) == 0)
+			{
+				signal(SIGINT, SIG_IGN);
+				signal(SIGQUIT, SIG_IGN);
+			}
+		}
+		else
+			cmd->pid = 1;
+		if (cmd->pid == 0 || cmd->pid == 1)
+			set_cmd(ctx, i);
+		cmd = cmd->next;
+		i++;
+	}
+}

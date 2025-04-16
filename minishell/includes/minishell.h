@@ -10,11 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
- ***************ERROS NO VALGRIND***************
- * Só falta dar free nos still reachables em alguns comandos
- */
-
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
@@ -66,6 +61,17 @@ typedef struct aux
 	int		start;
 }	t_aux;
 
+// Struct for norm
+typedef struct s_exec_ctx
+{
+	t_cmd		*head;
+	t_cmd		*cmd;
+	char		***env;
+	int			(**_pipe)[2];
+	t_token		*list;
+	char		*line;
+}	t_exec_ctx;
+
 // Global variable for exit status
 extern int exit_status;
 
@@ -116,12 +122,14 @@ char	**remove_from_env(char **env, char *to_remove);
 void	free_arr(char **arr);
 void	signal_handler(int sig);
 int		exec_redir(t_cmd *cmd);
-void	not_builtin(t_cmd *head, t_cmd *cmd, char **env, t_token *list, char *line, int (**_pipe)[2]);
+void	not_builtin(t_exec_ctx *ctx);
 void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
 int		is_heredoc(t_cmd *cmd);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);
 int		is_builtin(char *arg);
 void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);
+void	start_execution_loop(t_exec_ctx *ctx, t_cmd *cmd);
+void	set_cmd(t_exec_ctx *ctx, int i);
 void	free_cmd(t_cmd *cmd);
 void	pipe_fd(t_cmd *head, t_cmd *cmd, int (**_pipe)[2], int i);
 void	builtin_pwd();

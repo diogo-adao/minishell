@@ -43,38 +43,42 @@ int is_valid(char *str)
     return (1);
 }
 
-void    export_env(char ***env, char *arg)
+int update_existing_env(char ***env, char *key, char *new_entry, size_t key_len)
 {
-    int i;
-    char *key;
-    char *pos;
-    char *new_entry;
-    
-    pos = ft_strchr(arg, '=');
-    if (!pos)
-        return;
-    key = ft_substr(arg, 0, pos - arg);
-    new_entry = ft_strdup(arg);
-    if (!new_entry)
-    {
-        free(key);
-        return;
-    }
+	int	i;
+
     i = -1;
-    while ((*env)[++i])
-    {
-        if (!ft_strncmp((*env)[i], key, pos - arg) && (*env)[i][pos - arg] == '=')
-        {
-            free((*env)[i]);
-            (*env)[i] = new_entry;
-            free(key);
-            return;
-        }
-    }
-    
-    free(key);
-    append_to_env(env, new_entry);
-    free(new_entry);
+	while ((*env)[++i])
+	{
+		if (!ft_strncmp((*env)[i], key, key_len)
+			&& (*env)[i][key_len] == '=')
+		{
+			free((*env)[i]);
+			(*env)[i] = new_entry;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+void	export_env(char ***env, char *arg)
+{
+	char	*key;
+	char	*pos;
+	char	*new_entry;
+
+	pos = ft_strchr(arg, '=');
+	if (!pos)
+		return ;
+	key = ft_substr(arg, 0, pos - arg);
+	new_entry = ft_strdup(arg);
+	if (!new_entry)
+		return (free(key), (void)0);
+	if (update_existing_env(env, key, new_entry, pos - arg))
+		return (free(key), (void)0);
+	append_to_env(env, new_entry);
+	free(new_entry);
+	free(key);
 }
 
 void    builtin_export(t_cmd *cmd, char ***env)

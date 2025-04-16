@@ -12,33 +12,31 @@
 
 #include "../../../includes/minishell.h"
 
-void	check_pid(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
+void	check_pid(t_exec_ctx *ctx)
 {
 	int	exit_code;
 
-	if (cmd->pid == 0)
+	if (ctx->cmd->pid == 0)
 	{
-		exit_code = cmd->exit;
-		free_all(list, line, head, 1);
-		free_arr(*env);
-		free(*_pipe);
+		exit_code = ctx->cmd->exit;
+		free_all(ctx->list, ctx->line, ctx->head, 1);
+		free_arr(*(ctx->env));
+		free(*(ctx->_pipe));
 		exit(exit_code);
 	}
-	if (cmd->args && cmd->pid == 1 && (!ft_strncmp(cmd->args[0], "exit", 4)
-			&& ft_strlen(cmd->args[0]) == 4))
+	if (ctx->cmd->args && ctx->cmd->pid == 1 && !ft_strncmp(ctx->cmd->args[0], "exit", 4)
+		&& ft_strlen(ctx->cmd->args[0]) == 4 && !ctx->cmd->prev && !ctx->cmd->next)
 	{
-		if (cmd->prev || cmd->next)
-			return ;
-		if (cmd->args[1] && is_numeric(cmd->args[1]))
+		if (ctx->cmd->args[1] && is_numeric(ctx->cmd->args[1]))
 		{
-			if (cmd->args[2])
+			if (ctx->cmd->args[2])
 				return ;
 		}
 		printf("exit\n");
-		exit_code = cmd->exit;
-		free_all(list, line, cmd, 1);
-		free_arr(*env);
-		free(*_pipe);
+		exit_code = ctx->cmd->exit;
+		free_all(ctx->list, ctx->line, ctx->cmd, 1);
+		free_arr(*(ctx->env));
+		free(*(ctx->_pipe));
 		exit(exit_code);
 	}
 }
@@ -67,87 +65,72 @@ void	wait_pid(t_cmd *cmd)
 	}
 }
 
-void	exec_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], t_token *list, char *line)
+void exec_cmd(t_exec_ctx *ctx)
 {
-	if ((!ft_strncmp(cmd->args[0], "echo", 4)
-			&& ft_strlen(cmd->args[0]) == 4))
-		builtin_echo(cmd);
-	else if ((!ft_strncmp(cmd->args[0], "env", 3)
-			&& ft_strlen(cmd->args[0]) == 3))
-		builtin_env(*env);
-	else if ((!ft_strncmp(cmd->args[0], "unset", 5)
-			&& ft_strlen(cmd->args[0]) == 5))
-		builtin_unset(cmd, *env);
-	else if ((!ft_strncmp(cmd->args[0], "export", 6)
-			&& ft_strlen(cmd->args[0]) == 6))
-		builtin_export(cmd, env);
-	else if ((!ft_strncmp(cmd->args[0], "cd", 2)
-			&& ft_strlen(cmd->args[0]) == 2))
-		builtin_cd(cmd, env);
-	else if ((!ft_strncmp(cmd->args[0], "pwd", 3)
-			&& ft_strlen(cmd->args[0]) == 3))
-		builtin_pwd();
-	else if ((!ft_strncmp(cmd->args[0], "exit", 4)
-			&& ft_strlen(cmd->args[0]) == 4))
-		builtin_exit(cmd);
-	else
-		not_builtin(head, cmd, *env, list, line, _pipe);
-	check_pid(head, cmd, env, _pipe, list, line);
+    if ((!ft_strncmp(ctx->cmd->args[0], "echo", 4)
+            && ft_strlen(ctx->cmd->args[0]) == 4))
+        builtin_echo(ctx->cmd);
+    else if ((!ft_strncmp(ctx->cmd->args[0], "env", 3)
+            && ft_strlen(ctx->cmd->args[0]) == 3))
+        builtin_env(*ctx->env);
+    else if ((!ft_strncmp(ctx->cmd->args[0], "unset", 5)
+            && ft_strlen(ctx->cmd->args[0]) == 5))
+        builtin_unset(ctx->cmd, *ctx->env);
+    else if ((!ft_strncmp(ctx->cmd->args[0], "export", 6)
+            && ft_strlen(ctx->cmd->args[0]) == 6))
+        builtin_export(ctx->cmd, ctx->env);
+    else if ((!ft_strncmp(ctx->cmd->args[0], "cd", 2)
+            && ft_strlen(ctx->cmd->args[0]) == 2))
+        builtin_cd(ctx->cmd, ctx->env);
+    else if ((!ft_strncmp(ctx->cmd->args[0], "pwd", 3)
+            && ft_strlen(ctx->cmd->args[0]) == 3))
+        builtin_pwd();
+    else if ((!ft_strncmp(ctx->cmd->args[0], "exit", 4)
+            && ft_strlen(ctx->cmd->args[0]) == 4))
+        builtin_exit(ctx->cmd);
+    else
+        not_builtin(ctx);
+    check_pid(ctx);
 }
 
-void set_cmd(t_cmd *head, t_cmd *cmd, char ***env, int (**_pipe)[2], int i, t_token *list, char *line)
+void set_cmd(t_exec_ctx *ctx, int i)
 {
     int fd[2];
 
 	fd[0] = dup(STDIN_FILENO);
     fd[1] = dup(STDOUT_FILENO);
-	if (cmd->pid == 0)
-		pipe_fd(head, cmd, _pipe, i);
-    if (exec_redir(cmd))
+	if (ctx->cmd->pid == 0)
+		pipe_fd(ctx->head, ctx->cmd, ctx->_pipe, i);
+    if (exec_redir(ctx->cmd))
     {
-        if (cmd->args)
-        	exec_cmd(head, cmd, env, _pipe, list, line);
+        if (ctx->cmd->args)
+        	exec_cmd(ctx);
     }
 	else
-		check_pid(head, cmd, env, _pipe, list, line);
+		check_pid(ctx);
     dup2(fd[0], STDIN_FILENO);
     dup2(fd[1], STDOUT_FILENO);
     close(fd[0]);
     close(fd[1]);
 }
 
-void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
+void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
 {
-	int (*_pipe)[2];
-	int i;
-	t_cmd *head;
+	int			(*_pipe)[2];
+	t_exec_ctx	ctx;
 
-	head = cmd;
-	i = 0;
-    signal(SIGQUIT, signal_handler);
+	ctx.head = cmd;
+	ctx.env = env;
+	ctx._pipe = &_pipe;
+	ctx.list = list;
+	ctx.line = line;
+	signal(SIGQUIT, signal_handler);
 	if (is_heredoc(cmd))
-    	return ;
-    create_pipes(cmd, &_pipe);
-    while (cmd)
-    {
-        if (cmd->args && (!is_builtin(cmd->args[0]) || cmd->next || cmd->prev))
-		{
-			cmd->pid = fork();
-			if (ft_strncmp(cmd->args[0], "./minishell", 11) == 0)
-			{
-				signal(SIGINT, SIG_IGN);
-				signal(SIGQUIT, SIG_IGN);
-			}
-		}
-        else
-        	cmd->pid = 1;
-        if (cmd->pid == 0 || cmd->pid == 1)
-            set_cmd(head, cmd, env, &_pipe, i, list, line);
-     	cmd = cmd->next;
-		i++;
-	}
-	close_pipe(head, &_pipe);
-	wait_pid(head);
+		return ;
+	create_pipes(cmd, &_pipe);
+	start_execution_loop(&ctx, cmd);
+	close_pipe(ctx.head, &_pipe);
+	wait_pid(ctx.head);
 	free(*_pipe);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);

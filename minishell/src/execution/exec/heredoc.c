@@ -65,39 +65,51 @@ void heredoc_loop(int fd, char *del, int *flag)
     close(fd);
 }
 
-int is_heredoc(t_cmd *cmd)
+int	process_heredoc(t_redir *redir, int j, int *flag)
 {
-    int i;
-    int fd;
-    int flag;
-    char *tmp;
-    char *itoa_j;
-    char *joined;
-    int j = 0;
+	int		fd;
+	char	*tmp;
+	char	*itoa_j;
+	char	*joined;
 
-    flag = 0;
-    while (cmd)
-    {
-        i = -1;
-        while(cmd->redir && cmd->redir[++i])
-        {
-            if (cmd->redir[i]->flag == HEREDOC)
-            {
-                itoa_j = ft_itoa(j);
-                if (!itoa_j)
-                    return (0);
-                joined = ft_strjoin("/tmp/.heredoc_", itoa_j);
-                free(itoa_j);
-                tmp = ft_strdup(joined);
-                free(joined);
-                fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0664);
-                heredoc_loop(fd, cmd->redir[i]->file, &flag);
-                free(cmd->redir[i]->file);
-                cmd->redir[i]->file = tmp;
-            }
-            j++;
-        }
-        cmd = cmd->next;
-    }
-    return (flag);
+	itoa_j = ft_itoa(j);
+	if (!itoa_j)
+		return (0);
+	joined = ft_strjoin("/tmp/.heredoc_", itoa_j);
+	free(itoa_j);
+	if (!joined)
+		return (0);
+	tmp = ft_strdup(joined);
+	free(joined);
+	if (!tmp)
+		return (0);
+	fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	heredoc_loop(fd, redir->file, flag);
+	free(redir->file);
+	redir->file = tmp;
+	return (1);
+}
+
+int	is_heredoc(t_cmd *cmd)
+{
+	int	i;
+	int	j;
+	int	flag;
+
+	j = 0;
+	flag = 0;
+	while (cmd)
+	{
+		i = 0;
+		while (cmd->redir && cmd->redir[i])
+		{
+			if (cmd->redir[i]->flag == HEREDOC)
+				if (!process_heredoc(cmd->redir[i], j, &flag))
+					return (0);
+			j++;
+			i++;
+		}
+		cmd = cmd->next;
+	}
+	return (flag);
 }

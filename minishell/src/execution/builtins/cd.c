@@ -14,8 +14,8 @@
 
 void	update_pwd(char ***env, char *path)
 {
-	int		i;
-	char	*new_pwd;
+	int     i;
+	char    *new_pwd;
 	char	*old_pwd;
 
 	i = 0;
