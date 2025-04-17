@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 10:32:36 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/17 16:00:11 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 16:42:49 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	**ownenvp(char **envp)
 	int		size;
 	char	**newenvp;
 
+	if (!ft_getenv("_", envp))
+		return (zero_envp());
 	newenvp = NULL;
 	i = 0;
 	while (envp[i])
@@ -80,7 +82,7 @@ char	*ft_getenv(char *exp, char **env)
 	i = 0;
 	while (env[i])
 	{
-		if (strncmp(env[i], exp, len) == 0 && env[i][len] == '=')
+		if (ft_strncmp(env[i], exp, len) == 0 && env[i][len] == '=')
 			return (env[i] + len + 1);
 		i++;
 	}

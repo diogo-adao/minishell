@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 13:40:53 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/28 14:50:14 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/17 16:35:22 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ int	validqn(char *line)
 			u++;
 	}
 	if (i % 2 != 0 || j % 2 != 0)
-		return (printf("ERROR\n"), 0);
+		return (printf("minishell: syntax error\n"), 0);
 	return (1);
 }

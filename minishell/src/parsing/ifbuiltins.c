@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ifbuiltins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:29:16 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/17 15:57:09 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 16:32:03 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	builtins(char *line, char ***env)
 	{
 		free_all(list, line, exec, 0);
 		g_exit_status = 2;
-		printf("error\n");
+		printf("minishell: syntax error near unexpected token\n");
 		return ;
 	}
 	exec = execute_p(list);
