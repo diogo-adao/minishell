@@ -1,30 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/17 15:42:29 by diolivei          #+#    #+#             */
+/*   Updated: 2025/04/17 16:08:07 by diolivei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
-void free_cmd(t_cmd *cmd)
+void	handle_child_exit(t_exec_ctx *ctx)
 {
-    t_cmd *tmp;
-    int i;
+	int	exit_code;
 
-    while (cmd)
-    {
-        if (cmd->args)
-        {
-            i = 0;
-            while (cmd->args[i])
-                free(cmd->args[i++]);
-            free(cmd->args);
-        }
-        if (cmd->redir)
-        {
-            i = 0;
-            while (cmd->redir[i])
-            	free(cmd->redir[i++]);
-            free(cmd->redir);
-        }
-        tmp = cmd;
-        cmd = cmd->next;
-        free(tmp);
-    }
+	exit_code = ctx->cmd->exit;
+	free_all(ctx->list, ctx->line, ctx->head, 1);
+	free_arr(*(ctx->env));
+	free(*(ctx->_pipe));
+	exit(exit_code);
+}
+
+void	handle_builtin_exit(t_exec_ctx *ctx)
+{
+	int	exit_code;
+
+	if (ctx->cmd->args[1] && is_numeric(ctx->cmd->args[1]))
+	{
+		if (ctx->cmd->args[2])
+			return ;
+	}
+	printf("exit\n");
+	exit_code = ctx->cmd->exit;
+	free_all(ctx->list, ctx->line, ctx->cmd, 1);
+	free_arr(*(ctx->env));
+	free(*(ctx->_pipe));
+	exit(exit_code);
 }
 
 void	signal_handler(int sig)
@@ -44,13 +57,13 @@ void	signal_handler(int sig)
 			rl_on_new_line();
 			rl_redisplay();
 		}
-		exit_status = 130;
+		g_exit_status = 130;
 	}
 	else if (sig == SIGQUIT)
 	{
 		if (pid == 0)
 			printf("Quit (core dumped)\n");
-		exit_status = 131;
+		g_exit_status = 131;
 	}
 }
 

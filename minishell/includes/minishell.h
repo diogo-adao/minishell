@@ -6,17 +6,17 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/08 19:54:53 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 16:07:40 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include "../libraries/libft.h"
+# include "../libraries/libft.h"
 
 // Token types
-typedef enum
+typedef enum token_type
 {
 	STRING,
 	REDIR,
@@ -25,7 +25,7 @@ typedef enum
 	OUTPUT,
 	HEREDOC,
 	APPEND,
-}  e_token_type;
+}	t_token_type;
 
 // Redirections
 typedef struct s_redir
@@ -35,7 +35,7 @@ typedef struct s_redir
 }	t_redir;
 
 // Parser Struct
-typedef struct	s_token
+typedef struct s_token
 {
 	char			*value; // Token
 	int				type; // Token Type
@@ -45,18 +45,18 @@ typedef struct	s_token
 // Executor struct
 typedef struct s_cmd
 {
-	char **args; // Command and its arguments
-	int exit; // Exit status
-	int pid; // Parent and child processes
-	t_redir **redir; // Redirections struct
-	struct s_cmd *next; // Check for pipe (next command)
-	struct s_cmd *prev; // previus command
+	char			**args; // Command and its arguments
+	int				exit; // Exit status
+	int				pid; // Parent and child processes
+	t_redir			**redir; // Redirections struct
+	struct s_cmd	*next; // Check for pipe (next command)
+	struct s_cmd	*prev; // previus command
 }	t_cmd;
 
 typedef struct aux
 {
-	t_token				*list;
-	t_token				*new_node;
+	t_token	*list;
+	t_token	*new_node;
 	int		i;
 	int		start;
 }	t_aux;
@@ -73,7 +73,7 @@ typedef struct s_exec_ctx
 }	t_exec_ctx;
 
 // Global variable for exit status
-extern int exit_status;
+extern int	g_exit_status;
 
 // Parser functions
 void	builtins(char *line, char ***env);
@@ -85,35 +85,35 @@ char	*dolarparsing(char *line, char **env);
 char	*combine(char *line, char *expenv, int t, int i);
 char	*dolar(char *line, char **env);
 char	**ownenvp(char **envp);
-char 	*ft_getenv(char *exp, char **env);
-void 	literallist(t_token *list);
+char	*ft_getenv(char *exp, char **env);
+void	literallist(t_token *list);
 void	free_listt(t_token *list);
-t_token *creatlist(char *line);
+t_token	*creatlist(char *line);
 void	free_all(t_token *list, char *line, t_cmd *cmd, int i);
 void	free_env(char **env);
 int		checker_list(t_token *list);
 int		cheker_comands(t_token *list);
 t_cmd	*execute_p(t_token *list);
 void	print_tokens(t_token *list); //funcao simples para imprimir
-void print_exec(t_cmd *list); // teste
+void	print_exec(t_cmd *list); // teste
 char	*getexp(char *line, int t, int i, char **env);
 
 //execute_p
 t_redir	**redir_fill(t_redir **redir, t_token *list, int i);
 char	**arg_fill(char **args, t_token *list, int i);
-int	string_count(t_token *list);
-int	redir_count(t_token *list);
-int	get_type(t_token *list);
+int		string_count(t_token *list);
+int		redir_count(t_token *list);
+int		get_type(t_token *list);
 
 //expansao
-int	explen(char	*line, int i);
-int	endofexp(char letter);
-char *dolarparsing(char *line, char **env);
-void handle_double_quotes(int *i, char **line, char **temp, char **env);
-void handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env);
-void handle_single_quotes(int *i, char **line);
-void handle_dollar_sign(int *i, char **line, char **temp, char **env);
-void handle_exit_status(int *i, char **line, char **temp);
+int		explen(char	*line, int i);
+int		endofexp(char letter);
+char	*dolarparsing(char *line, char **env);
+void	handle_double_quotes(int *i, char **line, char **temp, char **env);
+void	handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env);
+void	handle_single_quotes(int *i, char **line);
+void	handle_dollar_sign(int *i, char **line, char **temp, char **env);
+void	handle_exit_status(int *i, char **line, char **temp);
 
 // Executor functions
 char	*ft_get_env(char **env, char *key);
@@ -127,16 +127,17 @@ void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
 int		is_heredoc(t_cmd *cmd);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);
 int		is_builtin(char *arg);
-void    start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);
+void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);
 void	start_execution_loop(t_exec_ctx *ctx, t_cmd *cmd);
 void	set_cmd(t_exec_ctx *ctx, int i);
-void	free_cmd(t_cmd *cmd);
+void	handle_child_exit(t_exec_ctx *ctx);
+void	handle_builtin_exit(t_exec_ctx *ctx);
 void	pipe_fd(t_cmd *head, t_cmd *cmd, int (**_pipe)[2], int i);
-void	builtin_pwd();
+void	builtin_pwd(void);
 void	builtin_unset(t_cmd *cmd, char **env);
-void    builtin_export(t_cmd *cmd, char ***env);
+void	builtin_export(t_cmd *cmd, char ***env);
 void	builtin_exit(t_cmd *cmd);
-void 	builtin_env(char **envp);
+void	builtin_env(char **envp);
 void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, char ***env);
 bool	is_numeric(const char *str);

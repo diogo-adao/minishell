@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:35 by diolivei          #+#    #+#             */
-/*   Updated: 2025/03/18 17:02:34 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/17 15:29:22 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ bool	is_numeric(const char *str)
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-			return false;
+			return (false);
 		i++;
 	}
-	return true;
+	return (true);
 }
 
 void	builtin_exit(t_cmd *cmd)
@@ -38,13 +38,13 @@ void	builtin_exit(t_cmd *cmd)
 			write(2, cmd->args[1], ft_strlen(cmd->args[1]));
 			write(2, ": numeric argument required\n", 28);
 			cmd->exit = 2;
-			return;
+			return ;
 		}
 		if (cmd->args[2])
 		{
 			write(2, "minishell: exit: too many arguments\n", 36);
 			cmd->exit = 1;
-			return;
+			return ;
 		}
 		cmd->exit = ft_atoi(cmd->args[1]) % 256;
 		if (cmd->exit < 0)

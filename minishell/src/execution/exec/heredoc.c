@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:12 by diolivei          #+#    #+#             */
-/*   Updated: 2025/03/18 17:20:22 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/17 15:46:26 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,50 +19,50 @@ void	heredoc_handler(int sig)
 		ioctl(0, TIOCSTI, "\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		exit_status = 130;
+		g_exit_status = 130;
 	}
 }
 
-int fill_heredoc(int fd, char *del, int *flag)
+int	fill_heredoc(int fd, char *del, int *flag)
 {
-    char *line;
+	char	*line;
 
-    line = readline("> ");
-    if (!line)
-    {
-        write(2, "minishell: warning: ", 20);
-        write(2, "here-document delimited by end-of-file\n", 39);
-        return 0;
-    }
-    if (exit_status == 130)
-    {
-        (*flag)++;
-        free(line);
-        return 0;
-    }
-    if (!ft_strncmp(line, del, ft_strlen(del)) 
-        && ft_strlen(line) == ft_strlen(del))
-    {
-        free(line);
-        return 0;
-    }
-    write(fd, line, ft_strlen(line));
-    write(fd, "\n", 1);
-    free(line);
-    return 1;
+	line = readline("> ");
+	if (!line)
+	{
+		write(2, "minishell: warning: ", 20);
+		write(2, "here-document delimited by end-of-file\n", 39);
+		return (0);
+	}
+	if (g_exit_status == 130)
+	{
+		(*flag)++;
+		free(line);
+		return (0);
+	}
+	if (!ft_strncmp(line, del, ft_strlen(del))
+		&& ft_strlen(line) == ft_strlen(del))
+	{
+		free(line);
+		return (0);
+	}
+	write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
+	free(line);
+	return (1);
 }
 
-void heredoc_loop(int fd, char *del, int *flag)
+void	heredoc_loop(int fd, char *del, int *flag)
 {
-    exit_status = 0;
-    signal(SIGINT, heredoc_handler);
-    signal(SIGQUIT, SIG_IGN);
-    while (!(*flag))
-    {
-        if (!fill_heredoc(fd, del, flag))
-            break;
-    }
-    close(fd);
+	g_exit_status = 0;
+	signal(SIGINT, heredoc_handler);
+	signal(SIGQUIT, SIG_IGN);
+	while (!(*flag))
+	{
+		if (!fill_heredoc(fd, del, flag))
+			break ;
+	}
+	close(fd);
 }
 
 int	process_heredoc(t_redir *redir, int j, int *flag)

@@ -6,13 +6,13 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:43:19 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/08 18:43:21 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:55:50 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int exit_status;
+int	g_exit_status;
 
 void	update_shlvl(char ***env)
 {
@@ -43,31 +43,32 @@ void	update_shlvl(char ***env)
 	}
 }
 
-void update_shlvl_if_needed(char ***env)
+void	update_shlvl_if_needed(char ***env)
 {
-    int i;
-    char *new_env_entry;
+	int		i;
+	char	*new_env_entry;
 
-    i = 0;
-    while ((*env)[i])
-    {
-        if (!ft_strncmp((*env)[i], "MINISHELL_FIRST_RUN=", 20))
-        {
-            update_shlvl(env);
-            return;
-        }
-        i++;
-    }
-    if ((new_env_entry = ft_strdup("MINISHELL_FIRST_RUN=1")))
-    {
-        append_to_env(env, new_env_entry);
-        free(new_env_entry);
-    }
+	i = 0;
+	while ((*env)[i])
+	{
+		if (!ft_strncmp((*env)[i], "MINISHELL_FIRST_RUN=", 20))
+		{
+			update_shlvl(env);
+			return ;
+		}
+		i++;
+	}
+	new_env_entry = ft_strdup("MINISHELL_FIRST_RUN=1");
+	if (new_env_entry)
+	{
+		append_to_env(env, new_env_entry);
+		free(new_env_entry);
+	}
 }
 
 static void	minishell_loop(char ***env)
 {
-	char *l;
+	char	*l;
 
 	while (1)
 	{
@@ -75,7 +76,7 @@ static void	minishell_loop(char ***env)
 		if (l == NULL)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		builtins(l, env);
 		add_history(l);

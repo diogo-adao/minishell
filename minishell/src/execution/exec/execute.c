@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:04 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/09 20:01:22 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 16:04:31 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,13 @@
 
 void	check_pid(t_exec_ctx *ctx)
 {
-	int	exit_code;
-
 	if (ctx->cmd->pid == 0)
-	{
-		exit_code = ctx->cmd->exit;
-		free_all(ctx->list, ctx->line, ctx->head, 1);
-		free_arr(*(ctx->env));
-		free(*(ctx->_pipe));
-		exit(exit_code);
-	}
-	if (ctx->cmd->args && ctx->cmd->pid == 1 && !ft_strncmp(ctx->cmd->args[0], "exit", 4)
-		&& ft_strlen(ctx->cmd->args[0]) == 4 && !ctx->cmd->prev && !ctx->cmd->next)
-	{
-		if (ctx->cmd->args[1] && is_numeric(ctx->cmd->args[1]))
-		{
-			if (ctx->cmd->args[2])
-				return ;
-		}
-		printf("exit\n");
-		exit_code = ctx->cmd->exit;
-		free_all(ctx->list, ctx->line, ctx->cmd, 1);
-		free_arr(*(ctx->env));
-		free(*(ctx->_pipe));
-		exit(exit_code);
-	}
+		handle_child_exit(ctx);
+	if (ctx->cmd->args && ctx->cmd->pid == 1 && \
+		!ft_strncmp(ctx->cmd->args[0], "exit", 4) && \
+		ft_strlen(ctx->cmd->args[0]) == 4 && \
+		!ctx->cmd->prev && !ctx->cmd->next)
+		handle_builtin_exit(ctx);
 }
 
 void	wait_pid(t_cmd *cmd)
@@ -55,9 +37,9 @@ void	wait_pid(t_cmd *cmd)
 			waitpid(cmd->pid, &status, 0);
 			if (WIFEXITED(status))
 			{
-				exit_status = WEXITSTATUS(status);
-				if (!exit_status)
-					exit_status = cmd->exit;
+				g_exit_status = WEXITSTATUS(status);
+				if (!g_exit_status)
+					g_exit_status = cmd->exit;
 				return ;
 			}
 		}
@@ -65,53 +47,53 @@ void	wait_pid(t_cmd *cmd)
 	}
 }
 
-void exec_cmd(t_exec_ctx *ctx)
+void	exec_cmd(t_exec_ctx *ctx)
 {
-    if ((!ft_strncmp(ctx->cmd->args[0], "echo", 4)
-            && ft_strlen(ctx->cmd->args[0]) == 4))
-        builtin_echo(ctx->cmd);
-    else if ((!ft_strncmp(ctx->cmd->args[0], "env", 3)
-            && ft_strlen(ctx->cmd->args[0]) == 3))
-        builtin_env(*ctx->env);
-    else if ((!ft_strncmp(ctx->cmd->args[0], "unset", 5)
-            && ft_strlen(ctx->cmd->args[0]) == 5))
-        builtin_unset(ctx->cmd, *ctx->env);
-    else if ((!ft_strncmp(ctx->cmd->args[0], "export", 6)
-            && ft_strlen(ctx->cmd->args[0]) == 6))
-        builtin_export(ctx->cmd, ctx->env);
-    else if ((!ft_strncmp(ctx->cmd->args[0], "cd", 2)
-            && ft_strlen(ctx->cmd->args[0]) == 2))
-        builtin_cd(ctx->cmd, ctx->env);
-    else if ((!ft_strncmp(ctx->cmd->args[0], "pwd", 3)
-            && ft_strlen(ctx->cmd->args[0]) == 3))
-        builtin_pwd();
-    else if ((!ft_strncmp(ctx->cmd->args[0], "exit", 4)
-            && ft_strlen(ctx->cmd->args[0]) == 4))
-        builtin_exit(ctx->cmd);
-    else
-        not_builtin(ctx);
-    check_pid(ctx);
+	if ((!ft_strncmp(ctx->cmd->args[0], "echo", 4)
+			&& ft_strlen(ctx->cmd->args[0]) == 4))
+		builtin_echo(ctx->cmd);
+	else if ((!ft_strncmp(ctx->cmd->args[0], "env", 3)
+			&& ft_strlen(ctx->cmd->args[0]) == 3))
+		builtin_env(*ctx->env);
+	else if ((!ft_strncmp(ctx->cmd->args[0], "unset", 5)
+			&& ft_strlen(ctx->cmd->args[0]) == 5))
+		builtin_unset(ctx->cmd, *ctx->env);
+	else if ((!ft_strncmp(ctx->cmd->args[0], "export", 6)
+			&& ft_strlen(ctx->cmd->args[0]) == 6))
+		builtin_export(ctx->cmd, ctx->env);
+	else if ((!ft_strncmp(ctx->cmd->args[0], "cd", 2)
+			&& ft_strlen(ctx->cmd->args[0]) == 2))
+		builtin_cd(ctx->cmd, ctx->env);
+	else if ((!ft_strncmp(ctx->cmd->args[0], "pwd", 3)
+			&& ft_strlen(ctx->cmd->args[0]) == 3))
+		builtin_pwd();
+	else if ((!ft_strncmp(ctx->cmd->args[0], "exit", 4)
+			&& ft_strlen(ctx->cmd->args[0]) == 4))
+		builtin_exit(ctx->cmd);
+	else
+		not_builtin(ctx);
+	check_pid(ctx);
 }
 
-void set_cmd(t_exec_ctx *ctx, int i)
+void	set_cmd(t_exec_ctx *ctx, int i)
 {
-    int fd[2];
+	int	fd[2];
 
 	fd[0] = dup(STDIN_FILENO);
-    fd[1] = dup(STDOUT_FILENO);
+	fd[1] = dup(STDOUT_FILENO);
 	if (ctx->cmd->pid == 0)
 		pipe_fd(ctx->head, ctx->cmd, ctx->_pipe, i);
-    if (exec_redir(ctx->cmd))
-    {
-        if (ctx->cmd->args)
-        	exec_cmd(ctx);
-    }
+	if (exec_redir(ctx->cmd))
+	{
+		if (ctx->cmd->args)
+			exec_cmd(ctx);
+	}
 	else
 		check_pid(ctx);
-    dup2(fd[0], STDIN_FILENO);
-    dup2(fd[1], STDOUT_FILENO);
-    close(fd[0]);
-    close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
+	dup2(fd[1], STDOUT_FILENO);
+	close(fd[0]);
+	close(fd[1]);
 }
 
 void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)

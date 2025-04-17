@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 10:32:36 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/27 16:08:01 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/04/17 16:00:11 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*ft_getenv(char *exp, char **env)
 
 	if (!exp || !env)
 		return (NULL);
-	len = strlen(exp);
+	len = ft_strlen(exp);
 	i = 0;
 	while (env[i])
 	{

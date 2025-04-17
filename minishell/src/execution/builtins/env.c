@@ -6,13 +6,13 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:31 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/16 16:49:15 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:25:21 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void builtin_env(char **envp)
+void	builtin_env(char **envp)
 {
 	while (*envp)
 	{

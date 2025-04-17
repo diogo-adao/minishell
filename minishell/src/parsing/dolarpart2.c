@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:43:55 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/09 19:04:37 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:58:54 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	handle_exit_status(int *i, char **line, char **temp)
 {
 	char	*expenv;
 
-	expenv = ft_itoa(exit_status);
+	expenv = ft_itoa(g_exit_status);
 	*line = combine(*line, expenv, 1, *i);
 	free (*temp);
 	*temp = *line;

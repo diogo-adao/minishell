@@ -6,17 +6,17 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:16 by diolivei          #+#    #+#             */
-/*   Updated: 2025/02/04 19:41:34 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:47:52 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-char *build_path(t_cmd *cmd, char **arr)
+char	*build_path(t_cmd *cmd, char **arr)
 {
-	int i;
-	char *final_path;
-	char *temp;
+	int		i;
+	char	*final_path;
+	char	*temp;
 
 	i = -1;
 	while (arr && arr[++i])
@@ -36,11 +36,11 @@ char *build_path(t_cmd *cmd, char **arr)
 	return (NULL);
 }
 
-char *search_path(t_cmd *cmd, char **env)
+char	*search_path(t_cmd *cmd, char **env)
 {
-	char *path;
-	char **arr;
-	char *final_path;
+	char	*path;
+	char	**arr;
+	char	*final_path;
 
 	if (ft_strchr(cmd->args[0], '/'))
 	{
@@ -49,7 +49,8 @@ char *search_path(t_cmd *cmd, char **env)
 		return (NULL);
 	}
 	path = ft_get_env(env, "PATH");
-	if (!path || !(arr = ft_split(path, ':')))
+	arr = ft_split(path, ':');
+	if (!path || !arr)
 	{
 		free(path);
 		return (NULL);
@@ -59,7 +60,7 @@ char *search_path(t_cmd *cmd, char **env)
 	return (final_path);
 }
 
-void exec_path(t_exec_ctx *ctx, char *cmd_path)
+void	exec_path(t_exec_ctx *ctx, char *cmd_path)
 {
 	struct stat	buf;
 
@@ -78,7 +79,7 @@ void exec_path(t_exec_ctx *ctx, char *cmd_path)
 
 void	not_builtin(t_exec_ctx *ctx)
 {
-	char *cmd_path;
+	char	*cmd_path;
 
 	if (!ctx->cmd->args[0][0])
 		return ;

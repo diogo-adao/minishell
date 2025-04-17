@@ -6,22 +6,22 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:43 by diolivei          #+#    #+#             */
-/*   Updated: 2024/12/16 18:14:51 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:28:16 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int search_env(char *env, char *str)
+int	search_env(char *env, char *str)
 {
-    while (*env && *env != '=')
-    {
-        if (*env != *str)
-            return (0);
-        env++;
-        str++;
-    }
-    return (*env == '=' && *str == '\0');
+	while (*env && *env != '=')
+	{
+		if (*env != *str)
+			return (0);
+		env++;
+		str++;
+	}
+	return (*env == '=' && *str == '\0');
 }
 
 void	builtin_unset(t_cmd *cmd, char **env)
