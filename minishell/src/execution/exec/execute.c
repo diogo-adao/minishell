@@ -107,7 +107,7 @@ void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
 	ctx.list = list;
 	ctx.line = line;
 	signal(SIGQUIT, signal_handler);
-	if (is_heredoc(cmd))
+	if (is_heredoc(cmd, env))
 		return ;
 	create_pipes(cmd, &_pipe);
 	start_execution_loop(&ctx, cmd);

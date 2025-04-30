@@ -14,12 +14,26 @@
 
 void	no_args(char **env)
 {
-	int	i;
+	int		i;
+	char	*equal_pos;
 
 	i = 0;
 	while (env[i])
 	{
-		printf("declare -x %s\n", env[i]);
+		write(1, "declare -x ", 11);
+		equal_pos = ft_strchr(env[i], '=');
+		if (equal_pos)
+		{
+			write(1, env[i], equal_pos - env[i] + 1);
+			write(1, "\"", 1);
+			write(1, equal_pos + 1, ft_strlen(equal_pos + 1));
+			write(1, "\"\n", 2);
+		}
+		else
+		{
+			write(1, env[i], ft_strlen(env[i]));
+			write(1, "\n", 1);
+		}
 		i++;
 	}
 }
@@ -50,7 +64,7 @@ int	update_existing_env(char ***env, char *key, char *new_entry, size_t key_len)
 	while ((*env)[++i])
 	{
 		if (!ft_strncmp((*env)[i], key, key_len)
-			&& (*env)[i][key_len] == '=')
+			&& ((*env)[i][key_len] == '\0' || (*env)[i][key_len] == '='))
 		{
 			free((*env)[i]);
 			(*env)[i] = new_entry;
@@ -67,13 +81,19 @@ void	export_env(char ***env, char *arg)
 	char	*new_entry;
 
 	pos = ft_strchr(arg, '=');
-	if (!pos)
-		return ;
-	key = ft_substr(arg, 0, pos - arg);
-	new_entry = ft_strdup(arg);
-	if (!new_entry)
-		return (free(key), (void)0);
-	if (update_existing_env(env, key, new_entry, pos - arg))
+	if (pos)
+	{
+		key = ft_substr(arg, 0, pos - arg);
+		new_entry = ft_strdup(arg);
+	}
+	else
+	{
+		key = ft_strdup(arg);
+		new_entry = ft_strdup(arg);
+	}
+	if (!new_entry || !key)
+		return (free(key), free(new_entry), (void)0);
+	if (update_existing_env(env, key, new_entry, ft_strlen(key)))
 		return (free(key), (void)0);
 	append_to_env(env, new_entry);
 	free(new_entry);
@@ -97,10 +117,9 @@ void	builtin_export(t_cmd *cmd, char ***env)
 				write(2, cmd->args[i], ft_strlen(cmd->args[i]));
 				write(2, ": not a valid identifier\n", 25);
 				cmd->exit = 1;
-				break ;
+				continue ;
 			}
-			if (ft_strchr(cmd->args[i], '='))
-				export_env(env, cmd->args[i]);
+			export_env(env, cmd->args[i]);
 		}
 	}
 }

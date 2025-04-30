@@ -32,7 +32,6 @@ void	handle_builtin_exit(t_exec_ctx *ctx)
 		if (ctx->cmd->args[2])
 			return ;
 	}
-	printf("exit\n");
 	exit_code = ctx->cmd->exit;
 	free_all(ctx->list, ctx->line, ctx->cmd, 1);
 	free_arr(*(ctx->env));

@@ -23,9 +23,10 @@ void	heredoc_handler(int sig)
 	}
 }
 
-int	fill_heredoc(int fd, char *del, int *flag)
+int	fill_heredoc(int fd, char *del, int *flag, char ***env)
 {
 	char	*line;
+	char	*expanded;
 
 	line = readline("> ");
 	if (!line)
@@ -35,37 +36,32 @@ int	fill_heredoc(int fd, char *del, int *flag)
 		return (0);
 	}
 	if (g_exit_status == 130)
-	{
-		(*flag)++;
-		free(line);
-		return (0);
-	}
-	if (!ft_strncmp(line, del, ft_strlen(del))
-		&& ft_strlen(line) == ft_strlen(del))
-	{
-		free(line);
-		return (0);
-	}
+		return (free(line), (*flag)++, 0);
+	if (!ft_strncmp(line, del, ft_strlen(del)) && ft_strlen(line) == ft_strlen(del))
+		return (free(line), 0);
+	expanded = dolar(line, *env);
+	free(line);
+	line = expanded;
 	write(fd, line, ft_strlen(line));
 	write(fd, "\n", 1);
 	free(line);
 	return (1);
 }
 
-void	heredoc_loop(int fd, char *del, int *flag)
+void	heredoc_loop(int fd, char *del, int *flag, char ***env)
 {
 	g_exit_status = 0;
 	signal(SIGINT, heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (!(*flag))
 	{
-		if (!fill_heredoc(fd, del, flag))
+		if (!fill_heredoc(fd, del, flag, env))
 			break ;
 	}
 	close(fd);
 }
 
-int	process_heredoc(t_redir *redir, int j, int *flag)
+int	process_heredoc(t_redir *redir, int j, int *flag, char ***env)
 {
 	int		fd;
 	char	*tmp;
@@ -84,13 +80,13 @@ int	process_heredoc(t_redir *redir, int j, int *flag)
 	if (!tmp)
 		return (0);
 	fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	heredoc_loop(fd, redir->file, flag);
+	heredoc_loop(fd, redir->file, flag, env);
 	free(redir->file);
 	redir->file = tmp;
 	return (1);
 }
 
-int	is_heredoc(t_cmd *cmd)
+int	is_heredoc(t_cmd *cmd, char ***env)
 {
 	int	i;
 	int	j;
@@ -104,7 +100,7 @@ int	is_heredoc(t_cmd *cmd)
 		while (cmd->redir && cmd->redir[i])
 		{
 			if (cmd->redir[i]->flag == HEREDOC)
-				if (!process_heredoc(cmd->redir[i], j, &flag))
+				if (!process_heredoc(cmd->redir[i], j, &flag, env))
 					return (0);
 			j++;
 			i++;

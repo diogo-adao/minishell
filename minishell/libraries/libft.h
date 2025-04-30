@@ -29,6 +29,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <limits.h>
 # include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>

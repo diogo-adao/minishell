@@ -102,7 +102,7 @@ t_token	*creatlist(char *line)
 	a = (t_aux){0};
 	while (line[a.i])
 	{
-		while (line[a.i] == ' ')
+		while (line[a.i] == ' ' || line[a.i] == '\t')
 			a.i++;
 		a.start = a.i;
 		if (line[a.i] == '<' || line[a.i] == '>' || line[a.i] == '|')

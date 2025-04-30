@@ -126,7 +126,7 @@ void	signal_handler(int sig);
 int		exec_redir(t_cmd *cmd);
 void	not_builtin(t_exec_ctx *ctx);
 void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
-int		is_heredoc(t_cmd *cmd);
+int		is_heredoc(t_cmd *cmd, char ***env);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);
 int		is_builtin(char *arg);
 void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);

@@ -16,9 +16,9 @@ bool	is_option_n(const char *arg)
 {
 	int	i;
 
-	i = 1;
-	if (arg[0] != '-')
+	if (!arg || arg[0] != '-' || arg[1] != 'n')
 		return (false);
+	i = 2;
 	while (arg[i])
 	{
 		if (arg[i] != 'n')

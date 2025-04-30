@@ -14,6 +14,20 @@
 
 int	g_exit_status;
 
+int	validate_shlvl(int shlvl)
+{
+	if (shlvl < 0)
+		return (0);
+	if (shlvl >= 1000)
+	{
+		write(2, "minishell: warning: shell level (", 34);
+		write(2, ft_itoa(shlvl), ft_strlen(ft_itoa(shlvl)));
+		write(2, ") too high, resetting to 1\n", 27);
+		return (1);
+	}
+	return (shlvl);
+}
+
 void	update_shlvl(char ***env)
 {
 	int		i;
@@ -22,13 +36,12 @@ void	update_shlvl(char ***env)
 	char	*new;
 
 	i = 0;
-	while ((*env)[i++])
+	while ((*env)[i])
 	{
 		if (!ft_strncmp((*env)[i], "SHLVL=", 6))
 		{
-			shlvl = ft_atoi((*env)[i] + 6) + 1;
-			if (shlvl < 0)
-				shlvl = 0;
+			shlvl = ft_atoi((*env)[i] + 6);
+			shlvl = validate_shlvl(shlvl + 1);
 			tmp = ft_itoa(shlvl);
 			if (!tmp)
 				return ;
@@ -40,6 +53,7 @@ void	update_shlvl(char ***env)
 			(*env)[i] = new;
 			return ;
 		}
+		i++;
 	}
 }
 
