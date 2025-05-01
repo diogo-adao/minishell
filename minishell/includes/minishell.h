@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 16:36:30 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/01 10:07:33 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	print_exec(t_cmd *list); // teste
 char	*getexp(char *line, int t, int i, char **env);
 char	**zero_envp(void);
 char	*allt(char *p1, char *p2, char *p3);
+void	skip_wordh(int *i, char *line);
 
 //execute_p
 t_redir	**redir_fill(t_redir **redir, t_token *list, int i);

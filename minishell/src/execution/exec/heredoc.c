@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:12 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:46:26 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/01 10:36:43 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ int	fill_heredoc(int fd, char *del, int *flag, char ***env)
 	}
 	if (g_exit_status == 130)
 		return (free(line), (*flag)++, 0);
-	if (!ft_strncmp(line, del, ft_strlen(del)) && ft_strlen(line) == ft_strlen(del))
+	if (!ft_strncmp(line, del, ft_strlen(del))
+		&& ft_strlen(line) == ft_strlen(del))
 		return (free(line), 0);
 	expanded = dolar(line, *env);
 	free(line);

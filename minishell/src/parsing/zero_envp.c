@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   zero_envp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 15:59:31 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/17 16:40:55 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/01 10:35:33 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,40 @@ char	**zero_envp(void)
 	envp[2] = ft_getus();
 	envp[3] = NULL;
 	return (envp);
+}
+
+int	validskip(char *line, int i)
+{
+	if (!line[i])
+		return (0);
+	if (line[i] == '<' || line[i] == ' ' || line[i] == '\t')
+		return (0);
+	if (line[i] == '>' || line[i] == '|')
+		return (0);
+	return (1);
+}
+
+void	skip_wordh(int *i, char *line)
+{
+	if (!line[(*i) + 1] || line[(*i) + 1] != '<')
+		return ;
+	(*i)++;
+	(*i)++;
+	while (line[(*i)] == ' ' || line[(*i)] == '\t')
+		(*i)++;
+	while (validskip(line, *i))
+	{
+		if (line[(*i)] == '"')
+		{
+			while (line[(*i)] && line[(*i)] != '"')
+				(*i)++;
+		}
+		if (line[(*i)] == 39)
+		{
+			while (line[(*i)] && line[(*i)] != '"')
+				(*i)++;
+		}
+		(*i)++;
+	}
+	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:24:57 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/09 18:45:00 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/01 10:07:05 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ char	*dolarparsing(char *line, char **env)
 			handle_single_quotes(&i, &line);
 		else if (line[i] == '$')
 			handle_dollar_sign(&i, &line, &temp, env);
+		else if (line[i] == '<')
+			skip_wordh(&i, line);
 		if (ft_strlen(line) != (unsigned long)i)
 			i++;
 	}

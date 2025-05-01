@@ -3,52 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ifbuiltins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:29:16 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/17 16:32:03 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/01 12:53:44 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	print_exec(t_cmd *list)
- {
- 	int	i;
- 
- 	i = 0;
- 	while (list)
- 	{
- 		while (list->args[i])
- 		{
- 			printf("argumento[%d]:%s\n", i, list->args[i]);
- 			i++;
- 		}
- 		i = 0;
- 		while (list->redir && list->redir[i])
- 		{
- 			printf("redir->file:%s redir->flag:%d\n", list->redir[i]->file, list->redir[i]->flag);
- 			i++;
- 		}
- 		i = 0;
- 		printf("exit:%d, pid:%d\n", list->exit, list->pid);
- 		if (list && list->next)
- 			list = list->next;
- 		else
- 			break ;
- 		printf("|\n");
- 	}
- }
- 
- void	print_tokens(t_token *list)
- {
- 	while (list)
- 	{
- 		printf("Value:{%s}, Type:'%d'\n", list->value, list->type);
- 		list = list->next;
- 	}
- 	printf("......FIM DA LISTA......\n");
- }
 
 char	*ft_copy(char *line)
 {
@@ -91,9 +53,7 @@ void	builtins(char *line, char ***env)
 		printf("minishell: syntax error near unexpected token\n");
 		return ;
 	}
-	print_exec(exec);
 	exec = execute_p(list);
-	print_tokens(list);
 	start_execution(exec, env, list, line);
 	free_all(list, line, exec, 1);
 }
