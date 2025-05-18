@@ -12,8 +12,6 @@
 
 #include "../../../includes/minishell.h"
 
-#include <limits.h> // para LLONG_MAX e LLONG_MIN
-
 bool	check_overflow(const char *str, int i, int sign)
 {
 	unsigned long long	num;
@@ -81,5 +79,5 @@ void	builtin_exit(t_cmd *cmd)
 			cmd->exit += 256;
 	}
 	else
-		cmd->exit = 0;
+		cmd->exit = g_exit_status;
 }

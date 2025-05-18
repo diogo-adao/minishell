@@ -14,14 +14,16 @@
 
 int	search_env(char *env, char *str)
 {
-	while (*env && *env != '=')
+	int	i;
+	
+	i= 0;
+	while (env[i] && str[i] && env[i] != '=')
 	{
-		if (*env != *str)
+		if (env[i] != str[i])
 			return (0);
-		env++;
-		str++;
+		i++;
 	}
-	return (*env == '=' && *str == '\0');
+	return (str[i] == '\0' && (env[i] == '\0' || env[i] == '='));
 }
 
 void	builtin_unset(t_cmd *cmd, char **env)

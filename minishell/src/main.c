@@ -110,5 +110,5 @@ int	main(int ac, char **av, char **envp)
 	update_shlvl_if_needed(&env);
 	minishell_loop(&env);
 	free_env(env);
-	return (0);
+	return (g_exit_status);
 }

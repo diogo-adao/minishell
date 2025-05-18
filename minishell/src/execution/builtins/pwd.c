@@ -16,7 +16,8 @@ void	builtin_pwd(void)
 {
 	char	path[1024];
 
-	getcwd(path, sizeof(path));
+	if (getcwd(path, sizeof(path)) == NULL)
+		return ;
 	if (errno == ERANGE)
 	{
 		write(2, "minishell: pwd: cannot access directory: ", 41);

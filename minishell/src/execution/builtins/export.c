@@ -15,27 +15,20 @@
 void	no_args(char **env)
 {
 	int		i;
-	char	*equal_pos;
+	char	**sorted;
 
+	sorted = copy_env(env);
+	if (!sorted)
+		return ;
+	sort_env(sorted);
 	i = 0;
-	while (env[i])
+	while (sorted[i])
 	{
-		write(1, "declare -x ", 11);
-		equal_pos = ft_strchr(env[i], '=');
-		if (equal_pos)
-		{
-			write(1, env[i], equal_pos - env[i] + 1);
-			write(1, "\"", 1);
-			write(1, equal_pos + 1, ft_strlen(equal_pos + 1));
-			write(1, "\"\n", 2);
-		}
-		else
-		{
-			write(1, env[i], ft_strlen(env[i]));
-			write(1, "\n", 1);
-		}
+		print_export(sorted[i]);
+		free(sorted[i]);
 		i++;
 	}
+	free(sorted);
 }
 
 int	is_valid(char *str)
@@ -46,7 +39,7 @@ int	is_valid(char *str)
 	if (!((str[0] >= 'a' && str[0] <= 'z') || \
 		(str[0] >= 'A' && str[0] <= 'Z') || str[0] == '_'))
 		return (0);
-	while (str[++i] && str[i] != '=')
+	while (str[++i] && !(str[i] == '=' || (str[i] == '+' && str[i + 1] == '=')))
 	{
 		if (!((str[i] >= 'a' && str[i] <= 'z') || \
 			(str[i] >= 'A' && str[i] <= 'Z') || \
@@ -56,7 +49,7 @@ int	is_valid(char *str)
 	return (1);
 }
 
-int	update_existing_env(char ***env, char *key, char *new_entry, size_t key_len)
+int	update_env(char ***env, char *key, char *new_entry, size_t key_len)
 {
 	int	i;
 
@@ -79,24 +72,27 @@ void	export_env(char ***env, char *arg)
 	char	*key;
 	char	*pos;
 	char	*new_entry;
+	int		append;
 
-	pos = ft_strchr(arg, '=');
+	append = 0;
+	pos = ft_strnstr(arg, "+=", ft_strlen(arg));
 	if (pos)
-	{
-		key = ft_substr(arg, 0, pos - arg);
-		new_entry = ft_strdup(arg);
-	}
+		append = 1;
+	else
+		pos = ft_strchr(arg, '=');
+	key = ft_substr(arg, 0, pos - arg);
+	if (append)
+		handle_append(env, key, pos);
 	else
 	{
-		key = ft_strdup(arg);
 		new_entry = ft_strdup(arg);
+		if (!new_entry)
+			return (free(key), (void)0);
+		if (update_env(env, key, new_entry, ft_strlen(key)))
+			return (free(key), (void)0);
+		append_to_env(env, new_entry);
+		free(new_entry);
 	}
-	if (!new_entry || !key)
-		return (free(key), free(new_entry), (void)0);
-	if (update_existing_env(env, key, new_entry, ft_strlen(key)))
-		return (free(key), (void)0);
-	append_to_env(env, new_entry);
-	free(new_entry);
 	free(key);
 }
 

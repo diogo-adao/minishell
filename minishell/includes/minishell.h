@@ -10,6 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+ * verificar os signals no pc da escola
+ * g_exit_status só pode receber signals
+*/
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -144,5 +149,11 @@ void	builtin_env(char **envp);
 void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, char ***env);
 bool	is_numeric(const char *str);
+void	sort_env(char **env);
+char	**copy_env(char **env);
+void	print_export(char *str);
+int		update_env(char ***env, char *key, char *new_entry, size_t key_len);
+char	*find_env_value(char **env, char *key);
+void	handle_append(char ***env, char *key, char *pos);
 
 #endif

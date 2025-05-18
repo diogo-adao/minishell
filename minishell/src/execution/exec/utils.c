@@ -37,7 +37,7 @@ void	append_to_env(char ***env, char *new_var)
 	while ((*env)[i])
 		i++;
 	*env = ft_realloc(*env, sizeof(char *) * (i + 1), sizeof(char *) * (i + 2));
-	(*env)[i] = strdup(new_var);
+	(*env)[i] = ft_strdup(new_var);
 	(*env)[i + 1] = NULL;
 }
 
