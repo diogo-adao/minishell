@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 15:42:29 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 16:08:07 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/19 19:31:04 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,22 @@ void	start_execution_loop(t_exec_ctx *ctx, t_cmd *cmd)
 	int	i;
 
 	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	i = 0;
 	while (cmd)
 	{
 		ctx->cmd = cmd;
 		if (cmd->args && (!is_builtin(cmd->args[0]) || cmd->next || cmd->prev))
+		{
 			cmd->pid = fork();
+			if (ft_strncmp(cmd->args[0], "./minishell", 11) == 0)
+				signal(SIGQUIT, SIG_IGN);
+		}
 		else
 			cmd->pid = 1;
 		if (cmd->pid == 0 || cmd->pid == 1)
 		{
-			signal(SIGINT, signal_handler);
-			signal(SIGQUIT, signal_handler);
+			if (cmd->pid == 0)
+				signal(SIGINT, signal_handler);
 			set_cmd(ctx, i);
 		}
 		cmd = cmd->next;

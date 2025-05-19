@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:43 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:28:16 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/19 19:11:10 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	search_env(char *env, char *str)
 {
 	int	i;
-	
-	i= 0;
+
+	i = 0;
 	while (env[i] && str[i] && env[i] != '=')
 	{
 		if (env[i] != str[i])

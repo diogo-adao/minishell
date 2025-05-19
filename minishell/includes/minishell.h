@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/19 16:32:54 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/19 19:18:32 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
- * verificar os signals no pc da escola
  * g_exit_status só pode receber signals
 */
 

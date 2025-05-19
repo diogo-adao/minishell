@@ -1,11 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/19 19:09:16 by diolivei          #+#    #+#             */
+/*   Updated: 2025/05/19 19:14:26 by diolivei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 void	sort_env(char **env)
 {
 	int		i;
 	int		j;
-	size_t	len_i;
-	size_t	len_j;
 	char	*temp;
 
 	i = 0;
@@ -14,9 +24,7 @@ void	sort_env(char **env)
 		j = i + 1;
 		while (env[j])
 		{
-			len_i = ft_strlen(env[i]);
-			len_j = ft_strlen(env[j]);
-			if (ft_strncmp(env[i], env[j], len_i > len_j ? len_i : len_j) > 0)
+			if (ft_strcmp(env[i], env[j]) > 0)
 			{
 				temp = env[i];
 				env[i] = env[j];
@@ -49,7 +57,6 @@ char	**copy_env(char **env)
 	copy[i] = NULL;
 	return (copy);
 }
-
 
 void	print_export(char *str)
 {
