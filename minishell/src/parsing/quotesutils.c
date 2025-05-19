@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 13:40:53 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/17 16:35:22 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/19 17:37:27 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,25 @@ int	validqn(char *line)
 	if (i % 2 != 0 || j % 2 != 0)
 		return (printf("minishell: syntax error\n"), 0);
 	return (1);
+}
+
+char	*add_fandl(char *line, char a)
+{
+	int		i;
+	char	*c;
+
+	i = 1;
+	c = NULL;
+	if (!line)
+		return (ft_strdup("\"\""));
+	c = malloc(sizeof(char) * (ft_strlen(line) + 3));
+	c[i - 1] = a;
+	while (line[i - 1])
+	{
+		c[i] = line[i - 1];
+		i++;
+	}
+	c[i] = a;
+	c[i + 1] = '\0';
+	return (c);
 }

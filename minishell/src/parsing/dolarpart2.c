@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dolarpart2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:43:55 by ppassos           #+#    #+#             */
-/*   Updated: 2025/04/17 15:58:54 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/19 17:32:48 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,20 @@ void	handle_dollar_sign(int *i, char **line, char **temp, char **env)
 {
 	int		t;
 	char	*expenv;
+	char	*a;
 
 	t = explen(*line, *i);
 	if (t != -2)
 	{
 		expenv = getexp(*line, t, *i, env);
-		if (!expenv)
-			expenv = ft_strdup("");
+		a = expenv;
+		expenv = add_fandl(expenv, '"');
+		free(a);
 		*line = combine(*line, expenv, t, *i);
 		free (*temp);
 		*temp = *line;
-		if (expenv)
-		{
-			(*i) += ft_strlen(expenv) - 1;
-			free (expenv);
-		}
+		(*i) += ft_strlen(expenv) - 1;
+		free (expenv);
 	}
 	else if ((*line)[*i + 1] == '?')
 		handle_exit_status(i, line, temp);

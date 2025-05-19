@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/01 10:07:33 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:32:54 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int		get_type(t_token *list);
 //expansao
 int		explen(char	*line, int i);
 int		endofexp(char letter);
+char	*add_fandl(char *line, char a);
 char	*dolarparsing(char *line, char **env);
 void	handle_double_quotes(int *i, char **line, char **temp, char **env);
 void	handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env);
