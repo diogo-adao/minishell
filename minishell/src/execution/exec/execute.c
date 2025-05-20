@@ -26,6 +26,7 @@ void	check_pid(t_exec_ctx *ctx)
 void	wait_pid(t_cmd *cmd)
 {
 	int	status;
+	int code;
 
 	status = 0;
 	while (cmd)
@@ -37,9 +38,10 @@ void	wait_pid(t_cmd *cmd)
 			waitpid(cmd->pid, &status, 0);
 			if (WIFEXITED(status))
 			{
-				g_exit_status = WEXITSTATUS(status);
-				if (!g_exit_status)
-					g_exit_status = cmd->exit;
+				code = WEXITSTATUS(status);
+				if (code == 0)
+					code = cmd->exit;
+				set_exit_status(code);
 				return ;
 			}
 		}

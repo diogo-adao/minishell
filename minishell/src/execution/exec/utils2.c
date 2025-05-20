@@ -20,6 +20,7 @@ void	handle_child_exit(t_exec_ctx *ctx)
 	free_all(ctx->list, ctx->line, ctx->head, 1);
 	free_arr(*(ctx->env));
 	free(*(ctx->_pipe));
+	set_exit_status(exit_code);
 	exit(exit_code);
 }
 
@@ -36,6 +37,7 @@ void	handle_builtin_exit(t_exec_ctx *ctx)
 	free_all(ctx->list, ctx->line, ctx->cmd, 1);
 	free_arr(*(ctx->env));
 	free(*(ctx->_pipe));
+	set_exit_status(exit_code);
 	exit(exit_code);
 }
 
@@ -56,13 +58,13 @@ void	signal_handler(int sig)
 			rl_on_new_line();
 			rl_redisplay();
 		}
-		g_exit_status = 130;
+		set_exit_status(130);
 	}
 	else if (sig == SIGQUIT)
 	{
 		if (pid == 0)
 			printf("Quit (core dumped)\n");
-		g_exit_status = 131;
+		set_exit_status(131);
 	}
 }
 

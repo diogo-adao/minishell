@@ -19,7 +19,7 @@ void	heredoc_handler(int sig)
 		ioctl(0, TIOCSTI, "\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		g_exit_status = 130;
+		set_exit_status(130);
 	}
 }
 
@@ -27,7 +27,9 @@ int	fill_heredoc(int fd, char *del, int *flag, char ***env)
 {
 	char	*line;
 	char	*expanded;
+	int		status;
 
+	status = get_exit_status();
 	line = readline("> ");
 	if (!line)
 	{
@@ -35,7 +37,7 @@ int	fill_heredoc(int fd, char *del, int *flag, char ***env)
 		write(2, "here-document delimited by end-of-file\n", 39);
 		return (0);
 	}
-	if (g_exit_status == 130)
+	if (status == 130)
 		return (free(line), (*flag)++, 0);
 	if (!ft_strncmp(line, del, ft_strlen(del))
 		&& ft_strlen(line) == ft_strlen(del))
@@ -51,7 +53,7 @@ int	fill_heredoc(int fd, char *del, int *flag, char ***env)
 
 void	heredoc_loop(int fd, char *del, int *flag, char ***env)
 {
-	g_exit_status = 0;
+	set_exit_status(0);
 	signal(SIGINT, heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (!(*flag))

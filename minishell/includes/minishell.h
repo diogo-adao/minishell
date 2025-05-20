@@ -10,10 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
- * g_exit_status só pode receber signals
-*/
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -75,9 +71,6 @@ typedef struct s_exec_ctx
 	t_token		*list;
 	char		*line;
 }	t_exec_ctx;
-
-// Global variable for exit status
-extern int	g_exit_status;
 
 // Parser functions
 void	builtins(char *line, char ***env);
@@ -155,5 +148,7 @@ void	print_export(char *str);
 int		update_env(char ***env, char *key, char *new_entry, size_t key_len);
 char	*find_env_value(char **env, char *key);
 void	handle_append(char ***env, char *key, char *pos);
+void	set_exit_status(int new_status);
+int		get_exit_status(void);
 
 #endif

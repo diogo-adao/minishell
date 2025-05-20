@@ -38,7 +38,7 @@ void	builtins(char *line, char ***env)
 	exec = NULL;
 	if (!validqn(line))
 	{
-		g_exit_status = 2;
+		set_exit_status(2);
 		return ;
 	}
 	line = dolar(line, *env);
@@ -49,7 +49,7 @@ void	builtins(char *line, char ***env)
 	if (!checker_list(list))
 	{
 		free_all(list, line, exec, 0);
-		g_exit_status = 2;
+		set_exit_status(2);
 		printf("minishell: syntax error near unexpected token\n");
 		return ;
 	}

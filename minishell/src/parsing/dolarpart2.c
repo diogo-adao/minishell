@@ -83,8 +83,10 @@ void	handle_dollar_sign(int *i, char **line, char **temp, char **env)
 void	handle_exit_status(int *i, char **line, char **temp)
 {
 	char	*expenv;
+	int		status;
 
-	expenv = ft_itoa(g_exit_status);
+	status = get_exit_status();
+	expenv = ft_itoa(status);
 	*line = combine(*line, expenv, 1, *i);
 	free (*temp);
 	*temp = *line;

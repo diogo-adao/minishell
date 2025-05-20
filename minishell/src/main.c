@@ -12,8 +12,6 @@
 
 #include "../includes/minishell.h"
 
-int	g_exit_status;
-
 int	validate_shlvl(int shlvl)
 {
 	if (shlvl < 0)
@@ -80,27 +78,33 @@ void	update_shlvl_if_needed(char ***env)
 	}
 }
 
-static void	minishell_loop(char ***env)
+int	minishell_loop(char ***env)
 {
 	char	*l;
+	int		last_status;
 
+	last_status = 0;
 	while (1)
 	{
 		l = readline("minishell> ");
 		if (l == NULL)
 		{
 			printf("exit\n");
+			last_status = get_exit_status();
 			break ;
 		}
 		builtins(l, env);
 		add_history(l);
 		free(l);
+		last_status = get_exit_status();
 	}
+	return (last_status);
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	char	**env;
+	int		status;
 
 	(void)ac;
 	(void)av;
@@ -108,7 +112,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	env = ownenvp(envp);
 	update_shlvl_if_needed(&env);
-	minishell_loop(&env);
+	status = minishell_loop(&env);
 	free_env(env);
-	return (g_exit_status);
+	return (status);
 }
