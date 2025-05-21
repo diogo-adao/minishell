@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executep.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:55:46 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/31 18:31:11 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/21 19:02:03 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,14 @@ void	token_execute(int count_s, int count_r, t_token **list, t_cmd **exec)
 	}
 }
 
-t_cmd	*execute_p(t_token *list)
+t_cmd	*execute_p(t_token *list, t_cmd *exec)
 {
-	t_cmd	*exec;
 	t_cmd	*head;
 	int		count_redir;
 	int		count_s;
 
-	exec = malloc(sizeof(t_cmd));
 	if (!exec)
 		return (NULL);
-	ft_memset(exec, 0, sizeof(t_cmd));
 	head = exec;
 	while (list)
 	{

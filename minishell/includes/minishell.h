@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/19 19:18:32 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:13:09 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define MINISHELL_H
 
 # include "../libraries/libft.h"
+
+extern int g_exit_status;
 
 // Token types
 typedef enum token_type
@@ -45,6 +47,8 @@ typedef struct s_token
 // Executor struct
 typedef struct s_cmd
 {
+	char			***env;
+	char			*line;
 	char			**args; // Command and its arguments
 	int				exit; // Exit status
 	int				pid; // Parent and child processes
@@ -73,14 +77,14 @@ typedef struct s_exec_ctx
 }	t_exec_ctx;
 
 // Parser functions
-void	builtins(char *line, char ***env);
+void	builtins(t_cmd *exec);
 int		validqn(char *line);
 char	*ft_copy(char *line);
 char	*literalparsing(char *new);
 char	*removequote(char *line, int t, int i);
-char	*dolarparsing(char *line, char **env);
+char	*dolarparsing(char *line, t_cmd *exec);
 char	*combine(char *line, char *expenv, int t, int i);
-char	*dolar(char *line, char **env);
+char	*dolar(t_cmd *exec);
 char	**ownenvp(char **envp);
 char	*ft_getenv(char *exp, char **env);
 void	literallist(t_token *list);
@@ -90,7 +94,7 @@ void	free_all(t_token *list, char *line, t_cmd *cmd, int i);
 void	free_env(char **env);
 int		checker_list(t_token *list);
 int		cheker_comands(t_token *list);
-t_cmd	*execute_p(t_token *list);
+t_cmd	*execute_p(t_token *list, t_cmd *exec);
 void	print_tokens(t_token *list); //funcao simples para imprimir
 void	print_exec(t_cmd *list); // teste
 char	*getexp(char *line, int t, int i, char **env);
@@ -109,12 +113,11 @@ int		get_type(t_token *list);
 int		explen(char	*line, int i);
 int		endofexp(char letter);
 char	*add_fandl(char *line, char a);
-char	*dolarparsing(char *line, char **env);
-void	handle_double_quotes(int *i, char **line, char **temp, char **env);
-void	handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env);
+void	handle_double_quotes(int *i, char **line, char **temp, t_cmd *exec);
+void	handle_dollar_inside_quotes(int *i, char **l, char **temp, t_cmd *exec);
 void	handle_single_quotes(int *i, char **line);
-void	handle_dollar_sign(int *i, char **line, char **temp, char **env);
-void	handle_exit_status(int *i, char **line, char **temp);
+void	handle_dollar_sign(int *i, char **line, char **temp, t_cmd *exec);
+void	handle_exit_status(int *i, char **line, char **temp, int exit);
 
 // Executor functions
 char	*ft_get_env(char **env, char *key);
@@ -125,7 +128,7 @@ void	signal_handler(int sig);
 int		exec_redir(t_cmd *cmd);
 void	not_builtin(t_exec_ctx *ctx);
 void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
-int		is_heredoc(t_cmd *cmd, char ***env);
+int		is_heredoc(t_cmd *cmd);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);
 int		is_builtin(char *arg);
 void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);
@@ -148,7 +151,6 @@ void	print_export(char *str);
 int		update_env(char ***env, char *key, char *new_entry, size_t key_len);
 char	*find_env_value(char **env, char *key);
 void	handle_append(char ***env, char *key, char *pos);
-void	set_exit_status(int new_status);
-int		get_exit_status(void);
+void	ft_config_terminal(void);
 
 #endif

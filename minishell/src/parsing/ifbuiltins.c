@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:29:16 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/01 12:53:44 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:36:15 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,28 @@ char	*ft_copy(char *line)
 	return (newline);
 }
 
-void	builtins(char *line, char ***env)
+void	builtins(t_cmd *exec)
 {
 	t_token	*list;
-	t_cmd	*exec;
 
-	exec = NULL;
-	if (!validqn(line))
+	if (!validqn(exec->line))
 	{
-		set_exit_status(2);
+		exec->exit = 2;
 		return ;
 	}
-	line = dolar(line, *env);
-	if (line == NULL)
+	exec->line = dolar(exec);
+	if (exec->line == NULL)
 		return ;
-	list = creatlist(line);
+	list = creatlist(exec->line);
 	literallist(list);
 	if (!checker_list(list))
 	{
-		free_all(list, line, exec, 0);
-		set_exit_status(2);
+		free_all(list, exec->line, exec, 0);
+		exec->exit = 2;
 		printf("minishell: syntax error near unexpected token\n");
 		return ;
 	}
-	exec = execute_p(list);
-	start_execution(exec, env, list, line);
-	free_all(list, line, exec, 1);
+	exec = execute_p(list, exec);
+	start_execution(exec, exec->env, list, exec->line);
+	free_all(list, exec->line, exec, 1);
 }

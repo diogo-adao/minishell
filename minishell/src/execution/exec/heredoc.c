@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:12 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/19 18:13:44 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:18:02 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,55 +16,52 @@ void	heredoc_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		ioctl(0, TIOCSTI, "\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		set_exit_status(130);
+		ioctl(0, TIOCSTI, "\n");
+		g_exit_status = 130;
 	}
 }
 
-int	fill_heredoc(int fd, char *del, int *flag, char ***env)
+int	fill_heredoc(int fd, char *del, int *flag, t_cmd *cmd)
 {
-	char	*line;
 	char	*expanded;
-	int		status;
 
-	status = get_exit_status();
-	line = readline("> ");
-	if (!line)
+	cmd->line = readline("> ");
+	if (!cmd->line)
 	{
 		write(2, "minishell: warning: ", 20);
 		write(2, "here-document delimited by end-of-file\n", 39);
 		return (0);
 	}
-	if (status == 130)
-		return (free(line), (*flag)++, 0);
-	if (!ft_strncmp(line, del, ft_strlen(del))
-		&& ft_strlen(line) == ft_strlen(del))
-		return (free(line), 0);
-	expanded = dolar(line, *env);
-	free(line);
-	line = expanded;
-	write(fd, line, ft_strlen(line));
+	if (g_exit_status == 130)
+		return (free(cmd->line), (*flag)++, 0);
+	if (!ft_strncmp(cmd->line, del, ft_strlen(del))
+		&& ft_strlen(cmd->line) == ft_strlen(del))
+		return (free(cmd->line), 0);
+	expanded = dolar(cmd);
+	free(cmd->line);
+	cmd->line = expanded;
+	write(fd, cmd->line, ft_strlen(cmd->line));
 	write(fd, "\n", 1);
-	free(line);
+	free(cmd->line);
 	return (1);
 }
 
-void	heredoc_loop(int fd, char *del, int *flag, char ***env)
+void	heredoc_loop(int fd, char *del, int *flag, t_cmd *cmd)
 {
-	set_exit_status(0);
+	g_exit_status = 0;
 	signal(SIGINT, heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (!(*flag))
 	{
-		if (!fill_heredoc(fd, del, flag, env))
+		if (!fill_heredoc(fd, del, flag, cmd))
 			break ;
 	}
 	close(fd);
 }
 
-int	process_heredoc(t_redir *redir, int j, int *flag, char ***env)
+int	process_heredoc(t_redir *redir, int j, int *flag, t_cmd *cmd)
 {
 	int		fd;
 	char	*tmp;
@@ -83,13 +80,13 @@ int	process_heredoc(t_redir *redir, int j, int *flag, char ***env)
 	if (!tmp)
 		return (0);
 	fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	heredoc_loop(fd, redir->file, flag, env);
+	heredoc_loop(fd, redir->file, flag, cmd);
 	free(redir->file);
 	redir->file = tmp;
 	return (1);
 }
 
-int	is_heredoc(t_cmd *cmd, char ***env)
+int	is_heredoc(t_cmd *cmd)
 {
 	int	i;
 	int	j;
@@ -103,7 +100,7 @@ int	is_heredoc(t_cmd *cmd, char ***env)
 		while (cmd->redir && cmd->redir[i])
 		{
 			if (cmd->redir[i]->flag == HEREDOC)
-				if (!process_heredoc(cmd->redir[i], j, &flag, env))
+				if (!process_heredoc(cmd->redir[i], j, &flag, cmd))
 					return (0);
 			j++;
 			i++;

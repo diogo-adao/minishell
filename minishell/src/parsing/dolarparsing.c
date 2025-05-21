@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:24:57 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/01 10:07:05 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:43:47 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*getexp(char *line, int t, int i, char **env)
 	return (expenv);
 }
 
-char	*dolarparsing(char *line, char **env)
+char	*dolarparsing(char *line, t_cmd *exec)
 {
 	int		i;
 	char	*temp;
@@ -74,11 +74,11 @@ char	*dolarparsing(char *line, char **env)
 	while (line[i])
 	{
 		if (line[i] == '"')
-			handle_double_quotes(&i, &line, &temp, env);
+			handle_double_quotes(&i, &line, &temp, exec);
 		else if (line[i] == 39)
 			handle_single_quotes(&i, &line);
 		else if (line[i] == '$')
-			handle_dollar_sign(&i, &line, &temp, env);
+			handle_dollar_sign(&i, &line, &temp, exec);
 		else if (line[i] == '<')
 			skip_wordh(&i, line);
 		if (ft_strlen(line) != (unsigned long)i)
@@ -87,11 +87,11 @@ char	*dolarparsing(char *line, char **env)
 	return (line);
 }
 
-char	*dolar(char *line, char **env)
+char	*dolar(t_cmd *exec)
 {
 	char	*new;
 
-	new = line;
-	new = dolarparsing(new, env);
+	new = exec->line;
+	new = dolarparsing(new, exec);
 	return (new);
 }

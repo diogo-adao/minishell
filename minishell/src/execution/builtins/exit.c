@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:35 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:29:22 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:18:13 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,5 @@ void	builtin_exit(t_cmd *cmd)
 			cmd->exit += 256;
 	}
 	else
-		cmd->exit = get_exit_status();
+		cmd->exit = g_exit_status;
 }

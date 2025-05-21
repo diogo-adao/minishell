@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:28 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/19 18:07:38 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:23:53 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,13 @@ void	free_arr(char **arr)
 	while (arr[++i])
 		free(arr[i]);
 	free(arr);
+}
+
+void	ft_config_terminal(void)
+{
+	struct termios	termios_p;
+
+	tcgetattr(STDIN_FILENO, &termios_p);
+	termios_p.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &termios_p);
 }
