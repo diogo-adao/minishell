@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:59:10 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/28 18:31:25 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/22 16:27:33 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	free_cmda(t_cmd *cmd)
 		i = 0;
 		cmda_s(&cmd, &i);
 		tmp = cmd->next;
-		free(cmd);
 		cmd = tmp;
 	}
 }

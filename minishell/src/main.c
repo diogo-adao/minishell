@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:43:19 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/21 19:21:23 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:30:09 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void	update_shlvl_if_needed(char ***env)
 int	minishell_loop(char ***env)
 {
 	t_cmd	cmd;
-
+	char *line;
+	
 	cmd.env = env;
 	cmd.exit = 0;
 	cmd.args = NULL;
@@ -100,9 +101,10 @@ int	minishell_loop(char ***env)
 			printf("exit\n");
 			break ;
 		}
+		line = cmd.line;
 		builtins(&cmd);
-		add_history(cmd.line);
-		free(cmd.line);
+		add_history(line);
+		free(line);
 	}
 	return (cmd.exit);
 }
