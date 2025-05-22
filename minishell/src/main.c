@@ -6,7 +6,7 @@
 /*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:43:19 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/22 16:30:09 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/22 18:40:10 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,8 @@ int	minishell_loop(char ***env)
 	t_cmd	cmd;
 	char *line;
 	
+	ft_bzero(&cmd, sizeof(cmd));
 	cmd.env = env;
-	cmd.exit = 0;
-	cmd.args = NULL;
-	cmd.exit = 0;
-	cmd.pid = 0;
-	cmd.redir = NULL;
-	cmd.next = NULL;
-	cmd.prev = NULL;
 	while (1)
 	{
 		cmd.line = readline("minishell> ");

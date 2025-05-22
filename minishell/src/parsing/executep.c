@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executep.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:55:46 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/21 19:02:03 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:03:21 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	token_execute(int count_s, int count_r, t_token **list, t_cmd **exec)
 			return ;
 		ft_memset((*exec)->next, 0, sizeof(t_cmd));
 		(*exec)->next->prev = (*exec);
+		//(*exec)->next->env = (*exec)->env;
+        //(*exec)->next->line = (*exec)->line;
 		(*exec) = (*exec)->next;
 	}
 }

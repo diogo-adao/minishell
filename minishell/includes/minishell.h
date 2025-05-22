@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/21 19:13:09 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/22 18:40:15 by ppassos          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,5 +152,6 @@ int		update_env(char ***env, char *key, char *new_entry, size_t key_len);
 char	*find_env_value(char **env, char *key);
 void	handle_append(char ***env, char *key, char *pos);
 void	ft_config_terminal(void);
+void	*ft_free(void *pointer);
 
 #endif
