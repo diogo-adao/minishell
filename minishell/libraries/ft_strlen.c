@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 14:11:29 by diolivei          #+#    #+#             */
-/*   Updated: 2024/04/17 19:22:05 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:05:20 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
+	if (!str)
+		return (i);
 	while (str[i])
 		i++;
 	return (i);

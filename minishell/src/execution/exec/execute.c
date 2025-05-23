@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:04 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/21 19:28:55 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:33:32 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	check_pid(t_exec_ctx *ctx)
 void	wait_pid(t_cmd *cmd)
 {
 	int	status;
-	int code;
 
 	status = 0;
 	while (cmd)
@@ -36,14 +35,8 @@ void	wait_pid(t_cmd *cmd)
 		else
 		{
 			waitpid(cmd->pid, &status, 0);
-			if (WIFEXITED(status))
-			{
-				code = WEXITSTATUS(status);
-				if (code == 0)
-					code = cmd->exit;
-				cmd->exit = code;
-				return ;
-			}
+			handle_last_status(cmd, status);
+			return ;
 		}
 		cmd = cmd->next;
 	}
@@ -68,7 +61,7 @@ void	exec_cmd(t_exec_ctx *ctx)
 		builtin_cd(ctx->cmd, ctx->env);
 	else if ((!ft_strncmp(ctx->cmd->args[0], "pwd", 3)
 			&& ft_strlen(ctx->cmd->args[0]) == 3))
-		builtin_pwd();
+		builtin_pwd(*ctx->env);
 	else if ((!ft_strncmp(ctx->cmd->args[0], "exit", 4)
 			&& ft_strlen(ctx->cmd->args[0]) == 4))
 		builtin_exit(ctx->cmd);
@@ -109,7 +102,7 @@ void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line)
 	ctx.list = list;
 	ctx.line = line;
 	signal(SIGQUIT, signal_handler);
-	if (is_heredoc(cmd))
+	if (is_heredoc(cmd, env))
 		return ;
 	create_pipes(cmd, &_pipe);
 	start_execution_loop(&ctx, cmd);

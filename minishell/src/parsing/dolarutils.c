@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dolarutils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:27:42 by ppassos           #+#    #+#             */
-/*   Updated: 2025/03/27 15:56:23 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/23 18:40:13 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,29 @@ char	*allt(char *p1, char *p2, char *p3)
 	return (allt);
 }
 
+char	*join_three(char *p1, char *mid, char *p2)
+{
+	char	*res;
+
+	if (mid && p1 && p2)
+		res = allt(p1, mid, p2);
+	else if (mid && p1)
+		res = ft_strjoin(p1, mid);
+	else if (mid && p2)
+		res = ft_strjoin(mid, p2);
+	else if (mid)
+		res = ft_copy(mid);
+	else if (p1 && p2)
+		res = ft_strjoin(p1, p2);
+	else if (p1)
+		res = ft_strdup(p1);
+	else if (p2)
+		res = ft_strdup(p2);
+	else
+		res = NULL;
+	return (res);
+}
+
 char	*combine(char *line, char *expenv, int t, int i)
 {
 	char	*part1;
@@ -86,23 +109,8 @@ char	*combine(char *line, char *expenv, int t, int i)
 
 	part1 = getpart1(NULL, line, i);
 	part2 = getpart2(NULL, line, (t + i + 1));
-	if (expenv == NULL && part1 != NULL && part2 != NULL)
-		newline = ft_strjoin(part1, part2);
-	if (expenv != NULL && part1 != NULL && part2 != NULL)
-		newline = allt(part1, expenv, part2);
-	if (expenv != NULL && part1 != NULL && part2 == NULL)
-		newline = ft_strjoin(part1, expenv);
-	if (expenv != NULL && part1 == NULL && part2 != NULL)
-		newline = ft_strjoin(expenv, part2);
-	if (expenv == NULL && part1 != NULL && part2 == NULL)
-		newline = ft_strdup(part1);
-	if (expenv == NULL && part1 == NULL && part2 != NULL)
-		newline = ft_strdup(part2);
-	if (expenv != NULL && part1 == NULL && part2 == NULL)
-		return (ft_copy(expenv));
-	if (part1)
-		free(part1);
-	if (part2)
-		free(part2);
+	newline = join_three(part1, expenv, part2);
+	free(part1);
+	free(part2);
 	return (newline);
 }

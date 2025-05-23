@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   status.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/09 16:25:40 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/23 18:30:02 by diolivei         ###   ########.fr       */
+/*   Created: 2025/05/23 12:29:30 by diolivei          #+#    #+#             */
+/*   Updated: 2025/05/23 12:30:17 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	builtin_pwd(char **env)
+int	*exit_status_ptr(void)
 {
-	char	path[1024];
-	char	*pwd;
+	static int	status = 0;
 
-	pwd = ft_getenv("PWD", env);
-	if (getcwd(path, sizeof(path)) == NULL)
-	{
-		printf("%s\n", pwd);
-		return ;
-	}
-	if (errno == ERANGE)
-	{
-		write(2, "minishell: pwd: cannot access directory: ", 41);
-		write(2, "No such file or directory", 25);
-	}
-	printf("%s\n", path);
+	return (&status);
+}
+
+void	set_exit_status(int new_status)
+{
+	*exit_status_ptr() = new_status;
+}
+
+int	get_exit_status(void)
+{
+	return (*exit_status_ptr());
 }

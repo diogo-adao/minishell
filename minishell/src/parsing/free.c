@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:59:10 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/22 19:16:51 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/23 16:35:08 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	free_listt(t_token *list)
 	{
 		temp = list;
 		list = list->next;
-		temp->value = ft_free(temp->value);
-		temp = ft_free(temp);
+		free(temp->value);
+		free(temp);
 	}
 }
 
@@ -32,10 +32,10 @@ void	free_env(char **env)
 	i = 0;
 	while (env[i])
 	{
-		env[i] = ft_free(env[i]);
+		free(env[i]);
 		i++;
 	}
-	env = ft_free(env);
+	free(env);
 }
 
 void	cmda_s(t_cmd **cmd, int *i)
@@ -44,18 +44,18 @@ void	cmda_s(t_cmd **cmd, int *i)
 	{
 		while ((*cmd)->redir[*i])
 		{
-			(*cmd)->redir[*i]->file = ft_free ((*cmd)->redir[*i]->file);
-			(*cmd)->redir[*i] = ft_free ((*cmd)->redir[*i]);
+			free ((*cmd)->redir[*i]->file);
+			free ((*cmd)->redir[*i]);
 			(*i)++;
 		}
-		(*cmd)->redir = ft_free ((*cmd)->redir);
+		free ((*cmd)->redir);
 	}
 }
 
 void	free_cmda(t_cmd *cmd)
 {
-	t_cmd	*tmp;
-	int		i;
+	t_cmd		*tmp;
+	int			i;
 
 	while (cmd)
 	{
@@ -64,34 +64,24 @@ void	free_cmda(t_cmd *cmd)
 		{
 			while (cmd->args[i])
 			{
-				cmd->args[i] = ft_free(cmd->args[i]);
+				free(cmd->args[i]);
 				i++;
 			}
-			cmd->args = ft_free(cmd->args);
+			free(cmd->args);
 		}
-		cmda_s(&cmd, &i); // Your custom cleanup
-
+		i = 0;
+		cmda_s(&cmd, &i);
 		tmp = cmd->next;
-		cmd = ft_free(cmd); // Always free current node
+		free(cmd);
 		cmd = tmp;
 	}
-}
-
-
-void	*ft_free(void *pointer)
-{
-	if (pointer)
-	{
-		free(pointer);
-		pointer = NULL;
-	}
-	return (NULL);
 }
 
 void	free_all(t_token *list, char *line, t_cmd *cmd, int i)
 {
 	free_listt(list);
-	line = ft_free(line);
+	if (line)
+		free(line);
 	if (i != 0)
 		free_cmda(cmd);
 }

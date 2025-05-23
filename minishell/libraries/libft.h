@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 14:11:42 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/21 17:23:39 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:54:13 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <limits.h>
-# include <sys/ioctl.h>
 # include <termio.h>
+# include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 

@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:38 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:31:06 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:29:17 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void	export_env(char ***env, char *arg)
 {
 	char	*key;
 	char	*pos;
-	char	*new_entry;
 	int		append;
 
 	append = 0;
@@ -80,20 +79,21 @@ void	export_env(char ***env, char *arg)
 		append = 1;
 	else
 		pos = ft_strchr(arg, '=');
+	if (!pos)
+	{
+		if (!ft_strcmp(arg, "PWD"))
+			return (handle_pwd_update(env));
+		else if (!ft_strcmp(arg, "OLDPWD"))
+			return (handle_oldpwd_update(env));
+		return ;
+	}
 	key = ft_substr(arg, 0, pos - arg);
+	if (!key)
+		return ;
 	if (append)
 		handle_append(env, key, pos);
 	else
-	{
-		new_entry = ft_strdup(arg);
-		if (!new_entry)
-			return (free(key), (void)0);
-		if (update_env(env, key, new_entry, ft_strlen(key)))
-			return (free(key), (void)0);
-		append_to_env(env, new_entry);
-		free(new_entry);
-	}
-	free(key);
+		export_non_append(env, arg, key);
 }
 
 void	builtin_export(t_cmd *cmd, char ***env)

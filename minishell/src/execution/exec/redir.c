@@ -6,11 +6,21 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:24 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:50:18 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:37:52 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+int	handle_error(t_cmd *cmd)
+{
+	if (errno == EACCES)
+		write(2, "minishell: Permission denied\n", 29);
+	else
+		write(2, "minishell: No such file or directory\n", 38);
+	cmd->exit = 1;
+	return (0);
+}
 
 int	file_open(t_cmd *cmd, int *input, int *output, int i)
 {
@@ -19,7 +29,7 @@ int	file_open(t_cmd *cmd, int *input, int *output, int i)
 		*input = open(cmd->redir[i]->file, O_RDONLY);
 		if (*input == -1)
 		{
-			write(2, "minishell: No such file or directory\n", 37);
+			handle_error(cmd);
 			cmd->exit = 1;
 			return (0);
 		}
@@ -31,7 +41,7 @@ int	file_open(t_cmd *cmd, int *input, int *output, int i)
 				O_CREAT | O_WRONLY | O_APPEND, 0664);
 	if (*output == -1)
 	{
-		write(2, "minishell: No such file or directory\n", 37);
+		handle_error(cmd);
 		cmd->exit = 1;
 		return (0);
 	}

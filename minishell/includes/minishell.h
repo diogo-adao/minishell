@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/22 18:40:15 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/23 18:33:15 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define MINISHELL_H
 
 # include "../libraries/libft.h"
-
-extern int g_exit_status;
 
 // Token types
 typedef enum token_type
@@ -47,8 +45,6 @@ typedef struct s_token
 // Executor struct
 typedef struct s_cmd
 {
-	char			***env;
-	char			*line;
 	char			**args; // Command and its arguments
 	int				exit; // Exit status
 	int				pid; // Parent and child processes
@@ -57,6 +53,7 @@ typedef struct s_cmd
 	struct s_cmd	*prev; // previus command
 }	t_cmd;
 
+// Structs for norm
 typedef struct aux
 {
 	t_token	*list;
@@ -65,7 +62,14 @@ typedef struct aux
 	int		start;
 }	t_aux;
 
-// Struct for norm
+typedef struct s_expand_ctx
+{
+	int		*i;
+	char	**line;
+	char	**temp;
+	char	**env;
+}	t_expand_ctx;
+
 typedef struct s_exec_ctx
 {
 	t_cmd		*head;
@@ -77,14 +81,14 @@ typedef struct s_exec_ctx
 }	t_exec_ctx;
 
 // Parser functions
-void	builtins(t_cmd *exec);
+void	builtins(char *line, char ***env);
 int		validqn(char *line);
 char	*ft_copy(char *line);
 char	*literalparsing(char *new);
 char	*removequote(char *line, int t, int i);
-char	*dolarparsing(char *line, t_cmd *exec);
+char	*dolarparsing(char *line, char **env);
 char	*combine(char *line, char *expenv, int t, int i);
-char	*dolar(t_cmd *exec);
+char	*dolar(char *line, char **env);
 char	**ownenvp(char **envp);
 char	*ft_getenv(char *exp, char **env);
 void	literallist(t_token *list);
@@ -94,7 +98,7 @@ void	free_all(t_token *list, char *line, t_cmd *cmd, int i);
 void	free_env(char **env);
 int		checker_list(t_token *list);
 int		cheker_comands(t_token *list);
-t_cmd	*execute_p(t_token *list, t_cmd *exec);
+t_cmd	*execute_p(t_token *list);
 void	print_tokens(t_token *list); //funcao simples para imprimir
 void	print_exec(t_cmd *list); // teste
 char	*getexp(char *line, int t, int i, char **env);
@@ -113,11 +117,13 @@ int		get_type(t_token *list);
 int		explen(char	*line, int i);
 int		endofexp(char letter);
 char	*add_fandl(char *line, char a);
-void	handle_double_quotes(int *i, char **line, char **temp, t_cmd *exec);
-void	handle_dollar_inside_quotes(int *i, char **l, char **temp, t_cmd *exec);
+char	*dolarparsing(char *line, char **env);
+void	handle_double_quotes(int *i, char **line, char **temp, char **env);
+void	handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env);
 void	handle_single_quotes(int *i, char **line);
-void	handle_dollar_sign(int *i, char **line, char **temp, t_cmd *exec);
-void	handle_exit_status(int *i, char **line, char **temp, int exit);
+void	handle_dollar_sign(int *i, char **line, char **temp, char **env);
+void	handle_exit_status(int *i, char **line, char **temp);
+void	expand_env_variable(t_expand_ctx ctx, int t);
 
 // Executor functions
 char	*ft_get_env(char **env, char *key);
@@ -128,7 +134,7 @@ void	signal_handler(int sig);
 int		exec_redir(t_cmd *cmd);
 void	not_builtin(t_exec_ctx *ctx);
 void	close_pipe(t_cmd *cmd, int (**_pipe)[2]);
-int		is_heredoc(t_cmd *cmd);
+int		is_heredoc(t_cmd *cmd, char ***env);
 void	create_pipes(t_cmd *cmd, int (**_pipe)[2]);
 int		is_builtin(char *arg);
 void	start_execution(t_cmd *cmd, char ***env, t_token *list, char *line);
@@ -137,7 +143,7 @@ void	set_cmd(t_exec_ctx *ctx, int i);
 void	handle_child_exit(t_exec_ctx *ctx);
 void	handle_builtin_exit(t_exec_ctx *ctx);
 void	pipe_fd(t_cmd *head, t_cmd *cmd, int (**_pipe)[2], int i);
-void	builtin_pwd(void);
+void	builtin_pwd(char **env);
 void	builtin_unset(t_cmd *cmd, char **env);
 void	builtin_export(t_cmd *cmd, char ***env);
 void	builtin_exit(t_cmd *cmd);
@@ -151,9 +157,14 @@ void	print_export(char *str);
 int		update_env(char ***env, char *key, char *new_entry, size_t key_len);
 char	*find_env_value(char **env, char *key);
 void	handle_append(char ***env, char *key, char *pos);
+void	set_exit_status(int new_status);
+int		get_exit_status(void);
 void	ft_config_terminal(void);
-void	*ft_free(void *pointer);
-void	free_all_list_and_line(t_cmd *cmd);
-void	free_all_tokens_and_line(t_token *list);
+void	print_cd_error(char *dir);
+void	print_getcwd_error(t_cmd *cmd);
+void	handle_pwd_update(char ***env);
+void	handle_oldpwd_update(char ***env);
+void	export_non_append(char ***env, char *arg, char *key);
+void	handle_last_status(t_cmd *cmd, int status);
 
 #endif

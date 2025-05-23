@@ -6,57 +6,70 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:46 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:28:39 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:24:26 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	update_pwd(char ***env, char *path)
+int	update_existing_pwd(char ***env, char *new_pwd, char **old_pwd)
 {
-	int		i;
-	char	*new_pwd;
-	char	*old_pwd;
+	int	i;
 
 	i = 0;
+	while ((*env)[i])
+	{
+		if (!ft_strncmp((*env)[i], "PWD=", 4))
+		{
+			*old_pwd = ft_strjoin("OLD", (*env)[i]);
+			if (!(*old_pwd))
+				return (0);
+			free((*env)[i]);
+			(*env)[i] = new_pwd;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+void	update_pwd(char ***env, char *path)
+{
+	char	*new_pwd;
+	char	*old_pwd;
+	int		pwd_found;
+
 	new_pwd = ft_strjoin("PWD=", path);
 	if (!new_pwd)
 		return ;
 	old_pwd = NULL;
 	*env = remove_from_env(*env, "OLDPWD");
-	while ((*env)[i])
-	{
-		if (!ft_strncmp((*env)[i], "PWD", 3) && (*env)[i][3] == '=')
-		{
-			old_pwd = ft_strjoin("OLD", (*env)[i]);
-			free((*env)[i]);
-			(*env)[i] = old_pwd;
-		}
-		i++;
-	}
-	append_to_env(env, new_pwd);
-	free(new_pwd);
+	pwd_found = update_existing_pwd(env, new_pwd, &old_pwd);
+	if (pwd_found && old_pwd)
+		append_to_env(env, old_pwd);
+	else
+		free(new_pwd);
+	free(old_pwd);
 }
 
 void	change_dir(t_cmd *cmd, char ***env, char *dir)
 {
 	char	path[1024];
+	char	*cwd;
 
 	if (chdir(dir) == -1)
 	{
-		write(2, "minishell: cd: ", 15);
-		write(2, dir, ft_strlen(dir));
-		if (access(dir, F_OK) == 0)
-			write(2, ": Not a directory\n", 18);
-		else
-			write(2, ": No such file or directory\n", 28);
+		print_cd_error(dir);
 		cmd->exit = 1;
+		return ;
 	}
+	cwd = getcwd(path, sizeof(path));
+	if (!cwd)
+		print_getcwd_error(cmd);
 	else
 	{
-		getcwd(path, sizeof(path));
-		if (path[0] != '\0')
-			update_pwd(env, path);
+		update_pwd(env, cwd);
+		cmd->exit = 0;
 	}
 }
 

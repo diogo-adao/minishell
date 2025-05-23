@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:51:16 by diolivei          #+#    #+#             */
-/*   Updated: 2025/04/17 15:47:52 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:09:57 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,12 @@ void	not_builtin(t_exec_ctx *ctx)
 {
 	char	*cmd_path;
 
-	if (!ctx->cmd->args[0][0])
+	if (!ctx->cmd->args[0] || !ctx->cmd->args[0][0])
+	{
+		write(2, "minishell: : command not found\n", 31);
+		ctx->cmd->exit = 127;
 		return ;
+	}
 	cmd_path = search_path(ctx->cmd, *ctx->env);
 	if (!cmd_path)
 	{

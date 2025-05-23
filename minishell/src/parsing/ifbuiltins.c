@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ifbuiltins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ppassos <ppassos@student.42.fr>            +#+  +:+       +#+        */
+/*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:29:16 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/22 19:25:37 by ppassos          ###   ########.fr       */
+/*   Updated: 2025/05/23 17:51:04 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,44 +30,30 @@ char	*ft_copy(char *line)
 	return (newline);
 }
 
-void free_all_tokens_and_line(t_token *list)
+void	builtins(char *line, char ***env)
 {
-    t_token *tmp;
+	t_token	*list;
+	t_cmd	*exec;
 
-    while (list)
-    {
-        tmp = list->next;
-        free(list->value);
-        free(list);
-        list = tmp;
-    }
-}
-
-void builtins(t_cmd *exec)
-{
-    t_token *list;
-    char    *orig;
-
-    if (!validqn(exec->line))
-    {
-        exec->exit = 2;
-        return;
-    }
-    orig = exec->line;
-    exec->line = dolar(exec);
-    free(orig);
-    if (!exec->line)
-        return;
-    list = creatlist(exec->line);
-    literallist(list);
-    if (!checker_list(list))
-    {
-        free_all_tokens_and_line(list);
-        exec->exit = 2;
-        printf("minishell: syntax error near unexpected token\n");
-        return;
-    }
-    execute_p(list, exec);
-    start_execution(exec, exec->env, list, exec->line);
-    free_all_tokens_and_line(list);
+	exec = NULL;
+	if (!validqn(line))
+	{
+		set_exit_status(2);
+		return ;
+	}
+	line = dolar(line, *env);
+	if (line == NULL)
+		return ;
+	list = creatlist(line);
+	literallist(list);
+	if (!checker_list(list))
+	{
+		free_all(list, line, exec, 0);
+		set_exit_status(2);
+		printf("minishell: syntax error near unexpected token\n");
+		return ;
+	}
+	exec = execute_p(list);
+	start_execution(exec, env, list, line);
+	free_all(list, line, exec, 1);
 }

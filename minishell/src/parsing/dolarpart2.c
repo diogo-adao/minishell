@@ -6,24 +6,24 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:43:55 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/21 18:56:38 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:13:26 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	handle_double_quotes(int *i, char **line, char **temp, t_cmd *exec)
+void	handle_double_quotes(int *i, char **line, char **temp, char **env)
 {
 	(*i)++;
 	while ((*line)[*i] != '"' && (*line)[*i])
 	{
 		if ((*line)[*i] == '$')
-			handle_dollar_inside_quotes(i, line, temp, exec);
+			handle_dollar_inside_quotes(i, line, temp, env);
 		(*i)++;
 	}
 }
 
-void	handle_dollar_inside_quotes(int *i, char **l, char **temp, t_cmd *exec)
+void	handle_dollar_inside_quotes(int *i, char **l, char **temp, char **env)
 {
 	int		t;
 	char	*expenv;
@@ -31,7 +31,7 @@ void	handle_dollar_inside_quotes(int *i, char **l, char **temp, t_cmd *exec)
 	t = explen(*l, *i);
 	if (t != -2)
 	{
-		expenv = getexp(*l, t, *i, *exec->env);
+		expenv = getexp(*l, t, *i, env);
 		*l = combine(*l, expenv, t, *i);
 		free (*temp);
 		*temp = *l;
@@ -42,7 +42,7 @@ void	handle_dollar_inside_quotes(int *i, char **l, char **temp, t_cmd *exec)
 		}
 	}
 	else if ((*l)[*i + 1] == '?')
-		handle_exit_status(i, l, temp, exec->exit);
+		handle_exit_status(i, l, temp);
 }
 
 void	handle_single_quotes(int *i, char **line)
@@ -52,39 +52,34 @@ void	handle_single_quotes(int *i, char **line)
 		(*i)++;
 }
 
-void	handle_dollar_sign(int *i, char **line, char **temp, t_cmd *exec)
+void	handle_dollar_sign(int *i, char **line, char **temp, char **env)
 {
-	int		t;
-	char	*expenv;
-	char	*a;
+	int				t;
+	t_expand_ctx	ctx;
 
+	ctx.i = i;
+	ctx.line = line;
+	ctx.temp = temp;
+	ctx.env = env;
 	t = explen(*line, *i);
 	if (t != -2)
-	{
-		expenv = getexp(*line, t, *i, *exec->env);
-		a = expenv;
-		expenv = add_fandl(expenv, '"');
-		free(a);
-		*line = combine(*line, expenv, t, *i);
-		free (*temp);
-		*temp = *line;
-		(*i) += ft_strlen(expenv);
-		free (expenv);
-	}
+		expand_env_variable(ctx, t);
 	else if ((*line)[*i + 1] == '?')
-		handle_exit_status(i, line, temp, exec->exit);
+		handle_exit_status(i, line, temp);
 	else
 		(*i)++;
 	(*i)--;
 	if (*i == -2)
-		(*i) = 0;
+		*i = 0;
 }
 
-void	handle_exit_status(int *i, char **line, char **temp, int exit)
+void	handle_exit_status(int *i, char **line, char **temp)
 {
 	char	*expenv;
+	int		status;
 
-	expenv = ft_itoa(exit);
+	status = get_exit_status();
+	expenv = ft_itoa(status);
 	*line = combine(*line, expenv, 1, *i);
 	free (*temp);
 	*temp = *line;

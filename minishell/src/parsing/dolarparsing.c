@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/26 11:24:57 by ppassos           #+#    #+#             */
-/*   Updated: 2025/05/21 18:43:47 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:05:49 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	endofexp(char letter)
 	if (letter == '|' || letter == ' ')
 		return (1);
 	if (letter == 39 || letter == '?')
+		return (1);
+	if (!ft_isdigit(letter) && !ft_isalnum(letter))
 		return (1);
 	return (0);
 }
@@ -63,7 +65,7 @@ char	*getexp(char *line, int t, int i, char **env)
 	return (expenv);
 }
 
-char	*dolarparsing(char *line, t_cmd *exec)
+char	*dolarparsing(char *line, char **env)
 {
 	int		i;
 	char	*temp;
@@ -71,14 +73,14 @@ char	*dolarparsing(char *line, t_cmd *exec)
 	i = 0;
 	line = ft_copy(line);
 	temp = line;
-	while (line[i])
+	while (line && line[i])
 	{
 		if (line[i] == '"')
-			handle_double_quotes(&i, &line, &temp, exec);
+			handle_double_quotes(&i, &line, &temp, env);
 		else if (line[i] == 39)
 			handle_single_quotes(&i, &line);
 		else if (line[i] == '$')
-			handle_dollar_sign(&i, &line, &temp, exec);
+			handle_dollar_sign(&i, &line, &temp, env);
 		else if (line[i] == '<')
 			skip_wordh(&i, line);
 		if (ft_strlen(line) != (unsigned long)i)
@@ -87,11 +89,11 @@ char	*dolarparsing(char *line, t_cmd *exec)
 	return (line);
 }
 
-char	*dolar(t_cmd *exec)
+char	*dolar(char *line, char **env)
 {
 	char	*new;
 
-	new = exec->line;
-	new = dolarparsing(new, exec);
+	new = line;
+	new = dolarparsing(new, env);
 	return (new);
 }

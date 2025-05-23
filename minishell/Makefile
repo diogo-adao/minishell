@@ -6,7 +6,7 @@
 #    By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/22 17:52:51 by diolivei          #+#    #+#              #
-#    Updated: 2025/05/19 19:18:18 by diolivei         ###   ########.fr        #
+#    Updated: 2025/05/23 16:15:38 by diolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ MAKEFLAGS += -s
 
 CC = cc -g
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = minishell
 
