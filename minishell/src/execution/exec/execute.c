@@ -26,7 +26,7 @@ void	check_pid(t_exec_ctx *ctx)
 void	wait_pid(t_cmd *cmd)
 {
 	int	status;
-	int	code;
+	int code;
 
 	status = 0;
 	while (cmd)

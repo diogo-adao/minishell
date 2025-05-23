@@ -29,81 +29,45 @@ char	*ft_copy(char *line)
 	newline[i] = '\0';
 	return (newline);
 }
-void print_cmd_list(t_cmd *cmd)
+
+void free_all_tokens_and_line(t_token *list)
 {
-    int i;
+    t_token *tmp;
 
-    while (cmd)
+    while (list)
     {
-        printf("Cmd node:\n");
-        
-        // Imprime se tem env ou não
-        if (cmd->env)
-            printf("  Env: PRESENT\n");
-        else
-            printf("  Env: NOT present\n");
-        
-        // Imprime line, se não for NULL
-        if (cmd->line)
-            printf("  Line: %s\n", cmd->line);
-        else
-            printf("  Line: (null)\n");
-
-        // Imprime args
-        if (cmd->args)
-        {
-            printf("  Args:\n");
-            i = 0;
-            while (cmd->args[i])
-            {
-                printf("    args[%d]: %s\n", i, cmd->args[i]);
-                i++;
-            }
-        }
-        else
-            printf("  Args: (null)\n");
-
-        // Imprime se redir existe
-        if (cmd->redir)
-            printf("  Redir: PRESENT\n");
-        else
-            printf("  Redir: NOT present\n");
-
-        // Indica se next e prev existem
-        printf("  Next: %s\n", (cmd->next) ? "Yes" : "No");
-        printf("  Prev: %s\n", (cmd->prev) ? "Yes" : "No");
-
-        printf("\n");
-
-        cmd = cmd->next;
+        tmp = list->next;
+        free(list->value);
+        free(list);
+        list = tmp;
     }
 }
 
-void	builtins(t_cmd *exec)
+void builtins(t_cmd *exec)
 {
-	t_token	*list;
+    t_token *list;
+    char    *orig;
 
-	if (!validqn(exec->line))
-	{
-		exec->exit = 2;
-		return ;
-	}
-	exec->line = dolar(exec);
-	if (exec->line == NULL)
-		return ;
-	list = creatlist(exec->line);
-	literallist(list);
-	if (!checker_list(list))
-	{
-		free_all(list, exec->line, exec, 0);
-		exec->exit = 2;
-		printf("minishell: syntax error near unexpected token\n");
-		return ;
-	}
-	//print_cmd_list(exec);
-	exec = execute_p(list, exec); // problema esta a dar aqui podes mecher aqui
-	printf("\n\n\n\n\n");
-	//print_cmd_list(exec);
-	//start_execution(exec, exec->env, list, exec->line);
-	free_all(list, exec->line, exec, 1); // da doule free ou n csg dar free dos outro pipes podes mecher aqui
+    if (!validqn(exec->line))
+    {
+        exec->exit = 2;
+        return;
+    }
+    orig = exec->line;
+    exec->line = dolar(exec);
+    free(orig);
+    if (!exec->line)
+        return;
+    list = creatlist(exec->line);
+    literallist(list);
+    if (!checker_list(list))
+    {
+        free_all_tokens_and_line(list);
+        exec->exit = 2;
+        printf("minishell: syntax error near unexpected token\n");
+        return;
+    }
+    execute_p(list, exec);
+    start_execution(exec, exec->env, list, exec->line);
+    free_all_tokens_and_line(list);
 }

@@ -37,32 +37,30 @@ void	token_execute(int count_s, int count_r, t_token **list, t_cmd **exec)
 			return ;
 		ft_memset((*exec)->next, 0, sizeof(t_cmd));
 		(*exec)->next->prev = (*exec);
-		//(*exec)->next->env = (*exec)->env;
-        //(*exec)->next->line = (*exec)->line;
+		(*exec)->next->env = (*exec)->env;
+        (*exec)->next->line = (*exec)->line;
 		(*exec) = (*exec)->next;
 	}
 }
 
-t_cmd	*execute_p(t_token *list, t_cmd *exec)
+t_cmd *execute_p(t_token *list, t_cmd *exec)
 {
-	t_cmd	*head;
-	int		count_redir;
-	int		count_s;
+    t_cmd *head = exec;
+    int count_redir;
+    int count_s;
 
-	if (!exec)
-		return (NULL);
-	head = exec;
-	while (list)
-	{
-		count_s = string_count(list);
-		count_redir = redir_count(list);
-		token_execute(count_s, count_redir, &list, &exec);
-		if (list && list->next)
-			list = list->next;
-		else
-			break ;
-	}
-	if (!exec->redir)
-		exec->redir = NULL;
-	return (head);
+    while (list)
+    {
+        count_s = string_count(list);
+        count_redir = redir_count(list);
+        token_execute(count_s, count_redir, &list, &exec);
+        if (list && list->next)
+            list = list->next;
+        else
+            break;
+    }
+    if (!exec->redir)
+        exec->redir = NULL;
+    return (head);
 }
+

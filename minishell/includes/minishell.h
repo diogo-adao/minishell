@@ -153,5 +153,7 @@ char	*find_env_value(char **env, char *key);
 void	handle_append(char ***env, char *key, char *pos);
 void	ft_config_terminal(void);
 void	*ft_free(void *pointer);
+void	free_all_list_and_line(t_cmd *cmd);
+void	free_all_tokens_and_line(t_token *list);
 
 #endif

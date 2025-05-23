@@ -23,30 +23,36 @@ void	heredoc_handler(int sig)
 	}
 }
 
-int	fill_heredoc(int fd, char *del, int *flag, t_cmd *cmd)
+int fill_heredoc(int fd, const char *del, int *flag, t_cmd *cmd)
 {
-	char	*expanded;
-
-	cmd->line = readline("> ");
-	if (!cmd->line)
-	{
-		write(2, "minishell: warning: ", 20);
-		write(2, "here-document delimited by end-of-file\n", 39);
-		return (0);
-	}
-	if (g_exit_status == 130)
-		return (free(cmd->line), (*flag)++, 0);
-	if (!ft_strncmp(cmd->line, del, ft_strlen(del))
-		&& ft_strlen(cmd->line) == ft_strlen(del))
-		return (free(cmd->line), 0);
-	expanded = dolar(cmd);
-	free(cmd->line);
-	cmd->line = expanded;
-	write(fd, cmd->line, ft_strlen(cmd->line));
-	write(fd, "\n", 1);
-	free(cmd->line);
-	return (1);
+    char *line;
+    (void)cmd;
+	
+    while (1)
+    {
+        line = readline("> ");
+        if (!line)
+        {
+            write(2, "minishell: warning: here-document delimited by end-of-file\n", 59);
+            return 0;
+        }
+        if (g_exit_status == 130)
+        {
+            free(line);
+            (*flag)++;
+            return 0;
+        }
+        if (!ft_strcmp(line, del))
+        {
+            free(line);
+            return 0;
+        }
+        write(fd, line, ft_strlen(line));
+        write(fd, "\n", 1);
+        free(line);
+    }
 }
+
 
 void	heredoc_loop(int fd, char *del, int *flag, t_cmd *cmd)
 {

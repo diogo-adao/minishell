@@ -79,5 +79,5 @@ void	builtin_exit(t_cmd *cmd)
 			cmd->exit += 256;
 	}
 	else
-		cmd->exit = g_exit_status;
+		cmd->exit = g_exit_status ? g_exit_status : cmd->exit;
 }

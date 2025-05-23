@@ -80,42 +80,79 @@ void	update_shlvl_if_needed(char ***env)
 	}
 }
 
-int	minishell_loop(char ***env)
+void free_all_list_and_line(t_cmd *head)
 {
-	t_cmd	cmd;
-	char *line;
-	
-	ft_bzero(&cmd, sizeof(cmd));
-	cmd.env = env;
-	while (1)
-	{
-		cmd.line = readline("minishell> ");
-		if (cmd.line == NULL)
-		{
-			printf("exit\n");
-			break ;
-		}
-		line = cmd.line;
-		builtins(&cmd);
-		add_history(line);
-		free(line);
-	}
-	return (cmd.exit);
+    t_cmd *curr = head;
+    t_cmd *next;
+    int   i;
+
+    while (curr)
+    {
+        next = curr->next;
+        if (curr->args)
+        {
+            for (i = 0; curr->args[i]; i++)
+                free(curr->args[i]);
+            free(curr->args);
+        }
+        if (curr->redir)
+        {
+            for (i = 0; curr->redir[i]; i++)
+            {
+                free(curr->redir[i]->file);
+                free(curr->redir[i]);
+            }
+            free(curr->redir);
+        }
+        if (curr == head && curr->line)
+            free(curr->line);
+        free(curr);
+        curr = next;
+    }
 }
 
-int	main(int ac, char **av, char **envp)
+int minishell_loop(char ***env)
 {
-	char	**env;
-	int		status;
+    t_cmd   *cmd;
+    int     exit_status = 0;
+    
+    while (1)
+    {
+        cmd = malloc(sizeof *cmd);
+        ft_bzero(cmd, sizeof *cmd);
+        cmd->env = env;
+        cmd->line = readline("minishell> ");
+        if (cmd->line == NULL)
+        {
+            printf("exit\n");
+            exit_status = g_exit_status ? g_exit_status : exit_status;
+            free(cmd);
+            break;
+        }
+        cmd->exit = exit_status;
+        add_history(cmd->line);
+        builtins(cmd);
+        exit_status = g_exit_status ? g_exit_status : cmd->exit;
+        g_exit_status = 0;
+        free_all_list_and_line(cmd);
+        free_all_tokens_and_line(NULL);
+    }
+    return exit_status;
+}
 
-	(void)ac;
-	(void)av;
-	ft_config_terminal();
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
-	env = ownenvp(envp);
-	update_shlvl_if_needed(&env);
-	status = minishell_loop(&env);
-	free_env(env);
-	return (status);
+int main(int ac, char **av, char **envp)
+{
+    char    **env;
+    int     status;
+
+    (void)ac;
+    (void)av;
+    ft_config_terminal();
+    signal(SIGINT, signal_handler);
+    signal(SIGQUIT, SIG_IGN);
+    env = ownenvp(envp);
+    update_shlvl_if_needed(&env);
+    status = minishell_loop(&env);
+    free_env(env);
+    return (status);
 }

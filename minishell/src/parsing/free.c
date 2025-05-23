@@ -52,34 +52,32 @@ void	cmda_s(t_cmd **cmd, int *i)
 	}
 }
 
-void free_cmda(t_cmd *cmd)
+void	free_cmda(t_cmd *cmd)
 {
-    t_cmd *tmp;
-    int i;
-    t_cmd *first = cmd;
+	t_cmd	*tmp;
+	int		i;
 
-    while (cmd)
-    {
-        i = 0;
-        if (cmd->args)
-        {
-            while (cmd->args[i])
-            {
-                cmd->args[i] = ft_free(cmd->args[i]);
-                i++;
-            }
-            cmd->args = ft_free(cmd->args);
-        }
-        i = 0;
-        cmda_s(&cmd, &i);
+	while (cmd)
+	{
+		i = 0;
+		if (cmd->args)
+		{
+			while (cmd->args[i])
+			{
+				cmd->args[i] = ft_free(cmd->args[i]);
+				i++;
+			}
+			cmd->args = ft_free(cmd->args);
+		}
+		cmda_s(&cmd, &i); // Your custom cleanup
 
-        tmp = cmd->next;
-        if (cmd != first)
-            cmd = ft_free(cmd);
-
-        cmd = tmp;
-    }
+		tmp = cmd->next;
+		cmd = ft_free(cmd); // Always free current node
+		cmd = tmp;
+	}
 }
+
+
 void	*ft_free(void *pointer)
 {
 	if (pointer)
