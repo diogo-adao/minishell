@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/23 18:33:15 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/24 04:42:38 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,6 @@ bool	is_numeric(const char *str);
 void	sort_env(char **env);
 char	**copy_env(char **env);
 void	print_export(char *str);
-int		update_env(char ***env, char *key, char *new_entry, size_t key_len);
-char	*find_env_value(char **env, char *key);
 void	handle_append(char ***env, char *key, char *pos);
 void	set_exit_status(int new_status);
 int		get_exit_status(void);

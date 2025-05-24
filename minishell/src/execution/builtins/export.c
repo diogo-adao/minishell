@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:25:38 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/23 18:29:17 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/24 04:32:06 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,51 +49,187 @@ int	is_valid(char *str)
 	return (1);
 }
 
-int	update_env(char ***env, char *key, char *new_entry, size_t key_len)
+int	find_env_key(char **env, const char *key)
 {
-	int	i;
-
-	i = -1;
-	while ((*env)[++i])
+	size_t key_len = 0;
+	while (key[key_len] && key[key_len] != '=' && key[key_len] != '+')
+		key_len++;
+	for (int i = 0; env[i]; i++)
 	{
-		if (!ft_strncmp((*env)[i], key, key_len)
-			&& ((*env)[i][key_len] == '\0' || (*env)[i][key_len] == '='))
-		{
-			free((*env)[i]);
-			(*env)[i] = new_entry;
-			return (1);
-		}
+		if (!strncmp(env[i], key, key_len) && (env[i][key_len] == '=' || env[i][key_len] == '\0'))
+			return i;
 	}
-	return (0);
+	return -1;
 }
 
-void	export_env(char ***env, char *arg)
+char *str_join_and_free(char *s1, const char *s2)
 {
-	char	*key;
-	char	*pos;
-	int		append;
-
-	append = 0;
-	pos = ft_strnstr(arg, "+=", ft_strlen(arg));
-	if (pos)
-		append = 1;
-	else
-		pos = ft_strchr(arg, '=');
-	if (!pos)
+	size_t len1 = s1 ? strlen(s1) : 0;
+	size_t len2 = strlen(s2);
+	char *new_str = malloc(len1 + len2 + 1);
+	if (!new_str)
 	{
-		if (!ft_strcmp(arg, "PWD"))
-			return (handle_pwd_update(env));
-		else if (!ft_strcmp(arg, "OLDPWD"))
-			return (handle_oldpwd_update(env));
-		return ;
+		free(s1);
+		return NULL;
 	}
-	key = ft_substr(arg, 0, pos - arg);
-	if (!key)
-		return ;
-	if (append)
-		handle_append(env, key, pos);
+	if (s1)
+		strcpy(new_str, s1);
 	else
-		export_non_append(env, arg, key);
+		new_str[0] = '\0';
+	strcat(new_str, s2);
+	free(s1);
+	return new_str;
+}
+
+int	export_env(char ***env, const char *arg)
+{
+	int idx;
+	char **new_env;
+	int count = 0;
+	char *key_end;
+	size_t key_len;
+	char *key;
+	char *value;
+	int append_mode = 0;
+
+	if (!env || !arg)
+		return -1;
+	key_end = strchr(arg, '=');
+	if (key_end && key_end != arg)
+	{
+		if (key_end > arg && *(key_end - 1) == '+')
+		{
+			append_mode = 1;
+			key_len = (size_t)(key_end - arg - 1);
+		}
+		else
+			key_len = (size_t)(key_end - arg);
+	}
+	else
+		key_len = strlen(arg);
+	key = malloc(key_len + 1);
+	if (!key)
+		return -1;
+	strncpy(key, arg, key_len);
+	key[key_len] = '\0';
+	value = NULL;
+	if (key_end)
+		value = (char *)(key_end + 1);
+	idx = find_env_key(*env, key);
+	if (idx >= 0)
+	{
+		if (append_mode)
+		{
+			char *old_val = strchr((*env)[idx], '=');
+			char *new_var;
+
+			if (!old_val)
+			{
+				free((*env)[idx]);
+				new_var = malloc(strlen(key) + 1 + strlen(value) + 1);
+				if (!new_var)
+				{
+					free(key);
+					return -1;
+				}
+				sprintf(new_var, "%s=%s", key, value ? value : "");
+				(*env)[idx] = new_var;
+				free(key);
+				return 0;
+			}
+			char *old_value = old_val + 1;
+			char *appended_value = str_join_and_free(strdup(old_value), value ? value : "");
+			if (!appended_value)
+			{
+				free(key);
+				return -1;
+			}
+			new_var = malloc(key_len + 1 + strlen(appended_value) + 1);
+			if (!new_var)
+			{
+				free(appended_value);
+				free(key);
+				return -1;
+			}
+			sprintf(new_var, "%s=%s", key, appended_value);
+			free(appended_value);
+			free((*env)[idx]);
+			(*env)[idx] = new_var;
+			free(key);
+			return 0;
+		}
+		else
+		{
+			if (key_end)
+			{
+				char *new_var = strdup(arg);
+				if (!new_var)
+				{
+					free(key);
+					return -1;
+				}
+				free((*env)[idx]);
+				(*env)[idx] = new_var;
+			}
+			free(key);
+			return 0;
+		}
+	}
+	else
+	{
+		while ((*env) && (*env)[count])
+			count++;
+		new_env = malloc(sizeof(char *) * (count + 2));
+		if (!new_env)
+		{
+			free(key);
+			return -1;
+		}
+		for (int i = 0; i < count; i++)
+			new_env[i] = (*env)[i];
+		if (append_mode)
+		{
+			char *new_var = malloc(key_len + 1 + strlen(value ? value : "") + 2);
+			if (!new_var)
+			{
+				free(new_env);
+				free(key);
+				return -1;
+			}
+			sprintf(new_var, "%s=%s", key, value ? value : "");
+			new_env[count] = new_var;
+		}
+		else
+		{
+			if (key_end)
+			{
+				new_env[count] = strdup(arg);
+				if (!new_env[count])
+				{
+					free(new_env);
+					free(key);
+					return -1;
+				}
+			}
+			else
+			{
+				char *new_var = malloc(key_len + 2);
+				if (!new_var)
+				{
+					free(new_env);
+					free(key);
+					return -1;
+				}
+				sprintf(new_var, "%s=", key);
+				new_env[count] = new_var;
+			}
+		}
+		new_env[count + 1] = NULL;
+		free(*env);
+		*env = new_env;
+		free(key);
+		return 0;
+	}
 }
 
 void	builtin_export(t_cmd *cmd, char ***env)

@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:09:16 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/19 19:14:26 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/05/24 04:42:34 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,42 +78,3 @@ void	print_export(char *str)
 	}
 }
 
-char	*find_env_value(char **env, char *key)
-{
-	int		i;
-	size_t	len;
-
-	len = ft_strlen(key);
-	i = -1;
-	while (env[++i])
-	{
-		if (!ft_strncmp(env[i], key, len) && env[i][len] == '=')
-			return (env[i] + len + 1);
-	}
-	return (NULL);
-}
-
-void	handle_append(char ***env, char *key, char *pos)
-{
-	char	*old;
-	char	*joined;
-	char	*temp;
-	char	*full;
-
-	old = find_env_value(*env, key);
-	if (old)
-		joined = ft_strjoin(old, pos + 2);
-	else
-		joined = ft_strdup(pos + 2);
-	temp = ft_strjoin(key, "=");
-	full = ft_strjoin(temp, joined);
-	free(temp);
-	free(joined);
-	if (update_env(env, key, ft_strdup(full), ft_strlen(key)))
-	{
-		free(full);
-		return ;
-	}
-	append_to_env(env, full);
-	free(full);
-}
