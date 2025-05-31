@@ -29,3 +29,60 @@ void	print_getcwd_error(t_cmd *cmd)
 	write(2, "\n", 1);
 	cmd->exit = 1;
 }
+
+int	find_env_key(char **env, const char *key)
+{
+	size_t key_len;
+	
+	key_len = 0;
+	while (key[key_len] && key[key_len] != '=' && key[key_len] != '+')
+		key_len++;
+	for (int i = 0; env[i]; i++)
+	{
+		if (!ft_strncmp(env[i], key, key_len) && (env[i][key_len] == '=' || env[i][key_len] == '\0'))
+			return (i);
+	}
+	return (-1);
+}
+
+char *extract_key(const char *arg, int *append_mode, char **value)
+{
+    char *key;
+    size_t key_len;
+    char *key_end;
+
+    *append_mode = 0;
+    *value = NULL;
+    key_len = get_key_len_and_mode(arg, append_mode);
+    key = malloc(key_len + 1);
+    if (!key)
+        return NULL;
+    ft_strncpy(key, arg, key_len);
+    key[key_len] = '\0';
+    key_end = ft_strchr(arg, '=');
+    if (key_end)
+        *value = (char *)(key_end + 1);
+    return key;
+}
+
+int	append_no_old(char **var, const char *key, char *value)
+{
+	char	*temp;
+	char	*new_var;
+	char	*val_to_use;
+
+	temp = ft_strjoin(key, "=");
+	if (!temp)
+		return (-1);
+	if (value)
+		val_to_use = value;
+	else
+		val_to_use = "";
+	new_var = ft_strjoin(temp, val_to_use);
+	free(temp);
+	if (!new_var)
+		return (-1);
+	free(*var);
+	*var = new_var;
+	return (0);
+}

@@ -78,3 +78,51 @@ void	print_export(char *str)
 	}
 }
 
+char *str_join_and_free(char *s1, const char *s2)
+{
+	size_t len1;
+	size_t len2;
+	char *new_str;
+	
+	if (s1)
+		len1 = ft_strlen(s1);
+	else
+		len1 = 0;
+	len2 = ft_strlen(s2);
+	new_str = malloc(len1 + len2 + 1);
+	if (!new_str)
+	{
+		free(s1);
+		return (NULL);
+	}
+	if (s1)
+		ft_strcpy(new_str, s1);
+	else
+		new_str[0] = '\0';
+	ft_strcat(new_str, s2);
+	free(s1);
+	return (new_str);
+}
+
+size_t get_key_len_and_mode(const char *arg, int *append_mode)
+{
+    char *key_end;
+    size_t key_len;
+
+    *append_mode = 0;
+    key_end = ft_strchr(arg, '=');
+    if (key_end && key_end != arg)
+    {
+        if (key_end > arg && *(key_end - 1) == '+')
+        {
+            *append_mode = 1;
+            key_len = (size_t)(key_end - arg - 1);
+        }
+        else
+            key_len = (size_t)(key_end - arg);
+    }
+    else
+        key_len = ft_strlen(arg);
+    return key_len;
+}
+

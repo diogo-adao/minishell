@@ -80,6 +80,13 @@ typedef struct s_exec_ctx
 	char		*line;
 }	t_exec_ctx;
 
+typedef struct s_var_data
+{
+    char  *key;
+    char  *value;
+    int    append_mode;
+}   t_var_data;
+
 // Parser functions
 void	builtins(char *line, char ***env);
 int		validqn(char *line);
@@ -154,15 +161,25 @@ bool	is_numeric(const char *str);
 void	sort_env(char **env);
 char	**copy_env(char **env);
 void	print_export(char *str);
-void	handle_append(char ***env, char *key, char *pos);
 void	set_exit_status(int new_status);
 int		get_exit_status(void);
 void	ft_config_terminal(void);
 void	print_cd_error(char *dir);
 void	print_getcwd_error(t_cmd *cmd);
-void	handle_pwd_update(char ***env);
-void	handle_oldpwd_update(char ***env);
-void	export_non_append(char ***env, char *arg, char *key);
 void	handle_last_status(t_cmd *cmd, int status);
+void	no_args(char **env);
+int		is_valid(char *str);
+int		insert_env_var(char ***env, char *new_var);
+int		handle_existing(char **env_var, t_var_data *var, const char *arg);
+char	*create_appended_var(const char *key, char *old_value, char *value);
+int		append_with_old(char **var, const char *key, char *value);
+int		append_to_var(char **var, const char *key, char *value);
+int		replace_var(char **var, const char *arg);
+char	*make_new_var(const char *arg, const char *key, char *value, int append_mode);
+char	*str_join_and_free(char *s1, const char *s2);
+size_t	get_key_len_and_mode(const char *arg, int *append_mode);
+int		find_env_key(char **env, const char *key);
+char	*extract_key(const char *arg, int *append_mode, char **value);
+int		append_no_old(char **var, const char *key, char *value);
 
 #endif
