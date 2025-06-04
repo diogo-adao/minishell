@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:21:04 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/24 04:27:25 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:37:26 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,41 @@ void	print_getcwd_error(t_cmd *cmd)
 
 int	find_env_key(char **env, const char *key)
 {
-	size_t key_len;
-	
+	size_t	key_len;
+	int		i;
+
+	i = 0;
 	key_len = 0;
 	while (key[key_len] && key[key_len] != '=' && key[key_len] != '+')
 		key_len++;
-	for (int i = 0; env[i]; i++)
+	while (env[i])
 	{
-		if (!ft_strncmp(env[i], key, key_len) && (env[i][key_len] == '=' || env[i][key_len] == '\0'))
+		if (!ft_strncmp(env[i], key, key_len)
+			&& (env[i][key_len] == '=' || env[i][key_len] == '\0'))
 			return (i);
+		i++;
 	}
 	return (-1);
 }
 
-char *extract_key(const char *arg, int *append_mode, char **value)
+char	*extract_key(const char *arg, int *append_mode, char **value)
 {
-    char *key;
-    size_t key_len;
-    char *key_end;
+	char	*key;
+	size_t	key_len;
+	char	*key_end;
 
-    *append_mode = 0;
-    *value = NULL;
-    key_len = get_key_len_and_mode(arg, append_mode);
-    key = malloc(key_len + 1);
-    if (!key)
-        return NULL;
-    ft_strncpy(key, arg, key_len);
-    key[key_len] = '\0';
-    key_end = ft_strchr(arg, '=');
-    if (key_end)
-        *value = (char *)(key_end + 1);
-    return key;
+	*append_mode = 0;
+	*value = NULL;
+	key_len = get_key_len_and_mode(arg, append_mode);
+	key = malloc(key_len + 1);
+	if (!key)
+		return (NULL);
+	ft_strncpy(key, arg, key_len);
+	key[key_len] = '\0';
+	key_end = ft_strchr(arg, '=');
+	if (key_end)
+		*value = (char *)(key_end + 1);
+	return (key);
 }
 
 int	append_no_old(char **var, const char *key, char *value)

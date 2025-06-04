@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_utils.c                                     :+:      :+:    :+:   */
+/*   export_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:09:16 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/24 04:42:34 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:45:32 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,38 +49,38 @@ int	is_valid(char *str)
 	return (1);
 }
 
-int insert_env_var(char ***env, char *new_var)
+int	insert_env_var(char ***env, char *new_var)
 {
-    int    count;
-    char **new_env;
-	int i;
+	int		count;
+	char	**new_env;
+	int		i;
 
 	i = 0;
-    count = 0;
-    while ((*env) && (*env)[count])
-        count++;
-    new_env = malloc(sizeof(char *) * (count + 2));
-    if (!new_env)
-	{ 
-    	return -1;
+	count = 0;
+	while ((*env) && (*env)[count])
+		count++;
+	new_env = malloc(sizeof(char *) * (count + 2));
+	if (!new_env)
+	{
+		return (-1);
 	}
 	while (i < count)
 	{
 		new_env[i] = (*env)[i];
 		i++;
 	}
-    new_env[count] = new_var;
-    new_env[count + 1] = NULL;
-    free(*env);
-    *env = new_env;
-    return 0;
+	new_env[count] = new_var;
+	new_env[count + 1] = NULL;
+	free(*env);
+	*env = new_env;
+	return (0);
 }
 
 int	handle_existing(char **env_var, t_var_data *var, const char *arg)
 {
-    if (var->append_mode)
-        return append_to_var(env_var, var->key, var->value);
-    else if (var->value)
-        return replace_var(env_var, arg);
-    return 0;
+	if (var->append_mode)
+		return (append_to_var(env_var, var->key, var->value));
+	else if (var->value)
+		return (replace_var(env_var, arg));
+	return (0);
 }

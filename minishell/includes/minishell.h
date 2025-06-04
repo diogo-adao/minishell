@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:53:00 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/24 04:42:38 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:44:38 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ typedef struct s_exec_ctx
 
 typedef struct s_var_data
 {
-    char  *key;
-    char  *value;
-    int    append_mode;
-}   t_var_data;
+	char	*key;
+	char	*value;
+	int		append_mode;
+}	t_var_data;
 
 // Parser functions
 void	builtins(char *line, char ***env);
@@ -175,7 +175,7 @@ char	*create_appended_var(const char *key, char *old_value, char *value);
 int		append_with_old(char **var, const char *key, char *value);
 int		append_to_var(char **var, const char *key, char *value);
 int		replace_var(char **var, const char *arg);
-char	*make_new_var(const char *arg, const char *key, char *value, int append_mode);
+char	*make_var(const char *arg, const char *key, char *value, int append);
 char	*str_join_and_free(char *s1, const char *s2);
 size_t	get_key_len_and_mode(const char *arg, int *append_mode);
 int		find_env_key(char **env, const char *key);

@@ -6,7 +6,7 @@
 /*   By: diolivei <diolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:09:16 by diolivei          #+#    #+#             */
-/*   Updated: 2025/05/24 04:42:34 by diolivei         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:38:47 by diolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,12 @@ void	print_export(char *str)
 	}
 }
 
-char *str_join_and_free(char *s1, const char *s2)
+char	*str_join_and_free(char *s1, const char *s2)
 {
-	size_t len1;
-	size_t len2;
-	char *new_str;
-	
+	size_t	len1;
+	size_t	len2;
+	char	*new_str;
+
 	if (s1)
 		len1 = ft_strlen(s1);
 	else
@@ -104,25 +104,24 @@ char *str_join_and_free(char *s1, const char *s2)
 	return (new_str);
 }
 
-size_t get_key_len_and_mode(const char *arg, int *append_mode)
+size_t	get_key_len_and_mode(const char *arg, int *append_mode)
 {
-    char *key_end;
-    size_t key_len;
+	char	*key_end;
+	size_t	key_len;
 
-    *append_mode = 0;
-    key_end = ft_strchr(arg, '=');
-    if (key_end && key_end != arg)
-    {
-        if (key_end > arg && *(key_end - 1) == '+')
-        {
-            *append_mode = 1;
-            key_len = (size_t)(key_end - arg - 1);
-        }
-        else
-            key_len = (size_t)(key_end - arg);
-    }
-    else
-        key_len = ft_strlen(arg);
-    return key_len;
+	*append_mode = 0;
+	key_end = ft_strchr(arg, '=');
+	if (key_end && key_end != arg)
+	{
+		if (key_end > arg && *(key_end - 1) == '+')
+		{
+			*append_mode = 1;
+			key_len = (size_t)(key_end - arg - 1);
+		}
+		else
+			key_len = (size_t)(key_end - arg);
+	}
+	else
+		key_len = ft_strlen(arg);
+	return (key_len);
 }
-
